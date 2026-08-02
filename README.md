@@ -1,6 +1,6 @@
 # Louise Castelatto — E-commerce
 
-Plataforma de e-commerce da **Louise Castelatto**, construída em monorepo com [Medusa](https://medusajs.com) no backend e [Next.js](https://nextjs.org) no storefront.
+Plataforma de e-commerce **Louise Castelatto**, construída em monorepo com [Medusa](https://medusajs.com) no backend e [Next.js](https://nextjs.org) no storefront.
 
 ## Estrutura do Projeto
 
