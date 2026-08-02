@@ -1,158 +1,152 @@
-<p align="center">
-  <a href="https://www.medusajs.com">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/59018053/229103275-b5e482bb-4601-46e6-8142-244f531cebdb.svg">
-    <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/59018053/229103726-e5b529a3-9b3f-4970-8a1f-c6af37f087bf.svg">
-    <img alt="Medusa logo" src="https://user-images.githubusercontent.com/59018053/229103726-e5b529a3-9b3f-4970-8a1f-c6af37f087bf.svg">
-    </picture>
-  </a>
-</p>
-<h1 align="center">
-  Medusa DTC Starter
-</h1>
+# Louise Castelatto — E-commerce
 
-<h4 align="center">
-  <a href="https://docs.medusajs.com">Documentation</a> |
-  <a href="https://www.medusajs.com">Website</a>
-</h4>
+Plataforma de e-commerce da **Louise Castelatto**, construída em monorepo com [Medusa](https://medusajs.com) no backend e [Next.js](https://nextjs.org) no storefront.
 
-<p align="center">
-  Building blocks for digital commerce
-</p>
-<p align="center">
-  <a href="https://github.com/medusajs/medusa/blob/develop/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Medusa is released under the MIT license." />
-  </a>
-  <a href="https://circleci.com/gh/medusajs/medusa">
-    <img src="https://circleci.com/gh/medusajs/medusa.svg?style=shield" alt="Current CircleCI build status." />
-  </a>
-  <a href="https://github.com/medusajs/medusa/blob/develop/CONTRIBUTING.md">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat" alt="PRs welcome!" />
-  </a>
-    <a href="https://www.producthunt.com/posts/medusa"><img src="https://img.shields.io/badge/Product%20Hunt-%231%20Product%20of%20the%20Day-%23DA552E" alt="Product Hunt"></a>
-  <a href="https://discord.gg/xpCwq3Kfn8">
-    <img src="https://img.shields.io/badge/chat-on%20discord-7289DA.svg" alt="Discord Chat" />
-  </a>
-  <a href="https://twitter.com/intent/follow?screen_name=medusajs">
-    <img src="https://img.shields.io/twitter/follow/medusajs.svg?label=Follow%20@medusajs" alt="Follow @medusajs" />
-  </a>
-</p>
+## Estrutura do Projeto
 
-# Medusa DTC Starter
-
-A production-ready monorepo starter for direct-to-consumer ecommerce stores powered by Medusa and Next.js. Includes a fully featured storefront with product browsing, cart, checkout, customer accounts, and order management.
-
-## Features
-
-- All of [Medusa's commerce features](https://docs.medusajs.com/resources/commerce-modules)
-- Multi-region support with automatic country detection
-- Product catalog with variant selection
-- Cart with promotion codes
-- Multi-step checkout with shipping and payment
-- Customer accounts with order history and address management
-- Order transfer between accounts
-
-## Getting Started
-
-### Deploy with Medusa Cloud
-
-The fastest way to get started is deploying with [Medusa Cloud](https://cloud.medusajs.com):
-
-1. [Create a Medusa Cloud account](https://cloud.medusajs.com)
-2. Deploy this starter directly from your dashboard
-
-### Local Installation
-
-> **Prerequisites:
->
-> - [Node.js](https://nodejs.org/) v20+
-> - [PostgreSQL](https://www.postgresql.org/) v15+
-> - [pnpm](https://pnpm.io/) v10+
-
-1. Clone the repository and install dependencies:
-
-```bash
-git clone https://github.com/medusajs/dtc-starter.git
-cd dtc-starter
-pnpm install
+```text
+.
+├── apps/
+│   ├── backend/      # API Medusa + painel admin (porta 9000)
+│   └── storefront/   # Loja Next.js (porta 8000)
+├── turbo.json
+└── package.json
 ```
 
-2. Set up environment variables for the backend:
+## Pré-requisitos
+
+- [Node.js](https://nodejs.org/) v20+
+- [PostgreSQL](https://www.postgresql.org/) v15+
+- npm v11+
+
+## Instalação Local
+
+### 1. Clone o repositório e instale as dependências
+
+```bash
+git clone <url-do-repositorio>
+cd LCe-commerce
+npm install
+```
+
+### 2. Configure as variáveis de ambiente do backend
 
 ```bash
 cp apps/backend/.env.template apps/backend/.env
 ```
 
-3. Set the database URL in `apps/backend.env`:
+Edite `apps/backend/.env` e defina a URL do banco de dados:
 
-```bash
-# Replace with actual database URL, make sure the database exists.
-DATABASE_URL=postgres://postgres:@localhost:5432/medusa-dtc-starter
+```env
+DATABASE_URL=postgres://postgres:@localhost:5432/louise-castelatto
 ```
 
-4. Run migrations:
-
-```bash
-cd apps/backend
-pnpm medusa db:migrate
-```
-
-5. Add admin user:
+### 3. Execute as migrations
 
 ```bash
 cd apps/backend
-pnpm medusa user -e admin@test.com -p supersecret
+npx medusa db:migrate
 ```
 
-6. Start Medusa backend:
+### 4. Crie o usuário administrador
 
 ```bash
 cd apps/backend
-pnpm dev
+npx medusa user -e admin@email.com -p suasenha
 ```
 
-7. Open the admin dashboard at `localhost:9000/app` and log in. Retrieve your publishable API key at Settings > Publishable API key.
-
-8. Set up environment variables for the storefront:
+### 5. Inicie o backend
 
 ```bash
-cp apps/storefront/.env.template apps/storefront/.env.local
+cd apps/backend
+npm run dev
 ```
 
-9. Update `apps/storefront/.env.local` with your Medusa publishable API key:
+Acesse o painel admin em `http://localhost:9000/app`.
+Em **Settings → Publishable API Key**, copie a chave pública.
+
+### 6. Configure as variáveis de ambiente do storefront
 
 ```bash
-NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_6c3...
+cp apps/storefront/.env.local.template apps/storefront/.env.local
 ```
 
-10.  Start storefront:
+Edite `apps/storefront/.env.local`:
+
+```env
+NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_...
+NEXT_PUBLIC_MEDUSA_BACKEND_URL=http://localhost:9000
+```
+
+### 7. Inicie o storefront
 
 ```bash
 cd apps/storefront
-pnpm dev
+npm run dev
 ```
 
-The storefront runs on `http://localhost:8000`.
+A loja estará disponível em `http://localhost:8000`.
 
-You can slo run the following command from the root to start both backend and storefront:
+---
+
+> **Atalho:** Para rodar backend e storefront simultaneamente a partir da raiz:
+>
+> ```bash
+> npm run dev
+> ```
+
+## Scripts Disponíveis
+
+Execute os comandos abaixo a partir da **raiz** do monorepo:
+
+| Comando | Descrição |
+|---|---|
+| `npm run dev` | Inicia backend e storefront em modo desenvolvimento |
+| `npm run backend:dev` | Inicia apenas o backend |
+| `npm run storefront:dev` | Inicia apenas o storefront |
+| `npm run build` | Faz o build de todos os apps |
+| `npm run lint` | Executa o linter em todos os apps |
+| `npm run test` | Executa os testes do backend |
+
+## Variáveis de Ambiente
+
+### Backend (`apps/backend/.env`)
+
+| Variável | Descrição |
+|---|---|
+| `DATABASE_URL` | URL de conexão com o PostgreSQL |
+| `JWT_SECRET` | Segredo para tokens JWT |
+| `COOKIE_SECRET` | Segredo para cookies de sessão |
+| `STORE_CORS` | Origens permitidas para a loja |
+| `ADMIN_CORS` | Origens permitidas para o painel admin |
+| `AUTH_CORS` | Origens permitidas para autenticação |
+
+### Storefront (`apps/storefront/.env.local`)
+
+| Variável | Descrição | Padrão |
+|---|---|---|
+| `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` | Chave pública da API Medusa | — |
+| `NEXT_PUBLIC_MEDUSA_BACKEND_URL` | URL do backend Medusa | `http://localhost:9000` |
+| `NEXT_PUBLIC_BASE_URL` | URL base do storefront | `http://localhost:8000` |
+| `NEXT_PUBLIC_STRIPE_KEY` | Chave pública do Stripe (opcional) | — |
+
+## Testes (Backend)
 
 ```bash
-pnpm dev
+# Testes unitários
+cd apps/backend
+npm run test:unit
+
+# Testes de integração — módulos
+npm run test:integration:modules
+
+# Testes de integração — HTTP
+npm run test:integration:http
 ```
 
-## Configuration
+> Os testes de integração requerem um banco PostgreSQL acessível.
 
-The storefront is configured via environment variables in `apps/storefront/.env.local`:
+## Recursos
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` | Publishable API key from your Medusa backend | — |
-| `NEXT_PUBLIC_MEDUSA_BACKEND_URL` | URL of your Medusa backend | `http://localhost:9000` |
-| `NEXT_PUBLIC_DEFAULT_REGION` | Default region country code | `dk` |
-| `NEXT_PUBLIC_BASE_URL` | Base URL of the storefront | `https://localhost:8000` |
-| `NEXT_PUBLIC_STRIPE_KEY` | Stripe publishable key (optional) | — |
-
-## Resources
-
-- [Medusa Documentation](https://docs.medusajs.com)
-- [Medusa Cloud](https://cloud.medusajs.com)
+- [Documentação Medusa](https://docs.medusajs.com)
+- [Documentação Next.js](https://nextjs.org/docs)

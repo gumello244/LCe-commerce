@@ -1,4 +1,3 @@
-import { Text } from "@modules/common/components/ui"
 import { getProductPrice } from "@lib/util/get-product-price"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
@@ -14,35 +13,38 @@ export default async function ProductPreview({
   isFeatured?: boolean
   region: HttpTypes.StoreRegion
 }) {
-  // const pricedProduct = await listProducts({
-  //   regionId: region.id,
-  //   queryParams: { id: [product.id!] },
-  // }).then(({ response }) => response.products[0])
-
-  // if (!pricedProduct) {
-  //   return null
-  // }
-
   const { cheapestPrice } = getProductPrice({
     product,
   })
 
   return (
-    <LocalizedClientLink href={`/products/${product.handle}`} className="group">
-      <div data-testid="product-wrapper">
-        <Thumbnail
-          thumbnail={product.thumbnail}
-          images={product.images}
-          size="full"
-          isFeatured={isFeatured}
-        />
-        <div className="flex txt-compact-medium mt-4 justify-between">
-          <Text className="text-ui-fg-subtle" data-testid="product-title">
-            {product.title}
-          </Text>
-          <div className="flex items-center gap-x-2">
-            {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
-          </div>
+    <LocalizedClientLink
+      href={`/products/${product.handle}`}
+      className="group flex flex-col"
+      data-testid="product-preview-link"
+    >
+      {/* ── Thumbnail ── */}
+      <div className="relative overflow-hidden rounded-sm bg-gray-50">
+        <div className="transition-transform duration-500 ease-out group-hover:scale-105">
+          <Thumbnail
+            thumbnail={product.thumbnail}
+            images={product.images}
+            size="full"
+            isFeatured={isFeatured}
+          />
+        </div>
+      </div>
+
+      {/* ── Info ── */}
+      <div className="mt-3 flex flex-col gap-1" data-testid="product-wrapper">
+        <p
+          className="text-[11px] font-bold tracking-[0.06em] uppercase text-gray-800 leading-snug line-clamp-2"
+          data-testid="product-title"
+        >
+          {product.title}
+        </p>
+        <div className="flex items-center gap-2" data-testid="product-price">
+          {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
         </div>
       </div>
     </LocalizedClientLink>

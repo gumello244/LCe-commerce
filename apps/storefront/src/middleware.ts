@@ -127,13 +127,19 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // if the url doesn't have the country, redirect to it
-  const redirectPath =
+  // Se a URL não tem o código do país, reescrevemos internamente sem mudar a barra de endereço do usuário
+  const rewritePath =
     request.nextUrl.pathname === "/" ? "" : request.nextUrl.pathname
   const queryString = request.nextUrl.search || ""
-  const redirectUrl = `${request.nextUrl.origin}/${country}${redirectPath}${queryString}`
+  const rewriteUrl = new URL(`/${country}${rewritePath}${queryString}`, request.url)
 
-  return NextResponse.redirect(redirectUrl, 307)
+  const response = NextResponse.rewrite(rewriteUrl)
+  if (!cacheIdCookie) {
+    response.cookies.set("_medusa_cache_id", cacheId, {
+      maxAge: 60 * 60 * 24,
+    })
+  }
+  return response
 }
 
 export const config = {

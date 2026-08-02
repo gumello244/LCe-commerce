@@ -80,12 +80,23 @@ const CartDropdown = ({
       onMouseLeave={close}
     >
       <Popover className="relative h-full">
-        <PopoverButton className="h-full">
+        <PopoverButton className="h-full flex items-center">
           <LocalizedClientLink
-            className="hover:text-ui-fg-base"
+            className="relative flex items-center text-gray-700 hover:text-brand-teal transition-colors"
             href="/cart"
             data-testid="nav-cart-link"
-          >{`Carrinho (${totalItems})`}</LocalizedClientLink>
+          >
+            {/* Ícone de sacola */}
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z" />
+            </svg>
+            {/* Badge de quantidade */}
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-brand-teal text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+                {totalItems}
+              </span>
+            )}
+          </LocalizedClientLink>
         </PopoverButton>
         <Transition
           show={cartDropdownOpen}
