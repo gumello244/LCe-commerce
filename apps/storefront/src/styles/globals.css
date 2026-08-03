@@ -1,6 +1,17 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* ── PALETA DE CORES LOUISE CASTELATTO (Edite aqui para trocar ou reverter em 1 clique) ── */
+  --brand-primary: #52998F;       /* Cor Principal (Teal) */
+  --brand-pink: #E88BA9;          /* Pink Elegante */
+  --brand-ronronar: #84A999;      /* Ronronar (Verde acinzentado) */
+  --brand-hortela: #C8DCD3;       /* Hortelã */
+  --brand-cubo-rosa: #F7D4CE;     /* Cubo Rosa */
+  --brand-rosa-pink: #EED7DF;     /* Rosa Pink Suave */
+  --brand-biscoito: #D3B691;      /* Biscoito/Nude */
+}
 
 @layer utilities {
   /* Chrome, Safari and Opera */

@@ -35,8 +35,12 @@ export const getCacheTag = async (tag: string): Promise<string> => {
 
 export const getCacheOptions = async (
   tag: string
-): Promise<{ tags: string[] } | Record<string, never>> => {
+): Promise<{ tags?: string[]; revalidate?: number } | Record<string, never>> => {
   if (typeof window !== "undefined") {
+    return {}
+  }
+
+  if (process.env.NODE_ENV === "development") {
     return {}
   }
 

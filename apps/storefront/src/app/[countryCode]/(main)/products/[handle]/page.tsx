@@ -71,27 +71,25 @@ function getImagesForVariant(
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params
-  const { handle } = params
-  const region = await getRegion(params.countryCode)
+  const { handle, countryCode } = params
 
-  if (!region) {
-    notFound()
-  }
+  const [region, product] = await Promise.all([
+    getRegion(countryCode),
+    listProducts({
+      countryCode,
+      queryParams: { handle },
+    }).then(({ response }) => response.products[0]),
+  ])
 
-  const product = await listProducts({
-    countryCode: params.countryCode,
-    queryParams: { handle },
-  }).then(({ response }) => response.products[0])
-
-  if (!product) {
+  if (!region || !product) {
     notFound()
   }
 
   return {
-    title: `${product.title} | Medusa Store`,
+    title: `${product.title} | Louise Castelatto`,
     description: `${product.title}`,
     openGraph: {
-      title: `${product.title} | Medusa Store`,
+      title: `${product.title} | Louise Castelatto`,
       description: `${product.title}`,
       images: product.thumbnail ? [product.thumbnail] : [],
     },
@@ -99,26 +97,25 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 }
 
 export default async function ProductPage(props: Props) {
-  const params = await props.params
-  const region = await getRegion(params.countryCode)
-  const searchParams = await props.searchParams
-
+  const [params, searchParams] = await Promise.all([
+    props.params,
+    props.searchParams,
+  ])
   const selectedVariantId = searchParams.v_id
 
-  if (!region) {
+  const [region, pricedProduct] = await Promise.all([
+    getRegion(params.countryCode),
+    listProducts({
+      countryCode: params.countryCode,
+      queryParams: { handle: params.handle },
+    }).then(({ response }) => response.products[0]),
+  ])
+
+  if (!region || !pricedProduct) {
     notFound()
   }
-
-  const pricedProduct = await listProducts({
-    countryCode: params.countryCode,
-    queryParams: { handle: params.handle },
-  }).then(({ response }) => response.products[0])
 
   const images = getImagesForVariant(pricedProduct, selectedVariantId)
-
-  if (!pricedProduct) {
-    notFound()
-  }
 
   return (
     <ProductTemplate

@@ -41,17 +41,13 @@ export const MAIN_CATEGORIES: CategoryConfig[] = [
     ],
   },
   {
-    name: "Moda Frio",
-    slug: "moda-frio",
-    href: "/roupas/moda-frio",
-    description: "Aqueça seu visual com moletons, corta ventos, jaquetas jeans, puffers e calças moletom.",
+    name: "Conjuntos",
+    slug: "conjuntos",
+    href: "/roupas/conjuntos",
+    description: "Conjuntos femininos sofisticados para todos os momentos: noite/festa e casual.",
     subcategories: [
-      { name: "Moletom", slug: "moletom", href: "/roupas/moda-frio/moletom" },
-      { name: "Corta Vento", slug: "corta-vento", href: "/roupas/moda-frio/corta-vento" },
-      { name: "Jaqueta Jeans", slug: "jaqueta-jeans", href: "/roupas/moda-frio/jaqueta-jeans" },
-      { name: "Puffer", slug: "puffer", href: "/roupas/moda-frio/puffer" },
-      // Calça Moletom é compartilhada com Calças. Aponta para a URL canônica de Calças.
-      { name: "Calça Moletom", slug: "calca-moletom", href: "/roupas/calcas/calca-moletom" },
+      { name: "Noite/Festa", slug: "noite-festa", href: "/roupas/conjuntos/noite-festa" },
+      { name: "Casual", slug: "casual", href: "/roupas/conjuntos/casual" },
     ],
   },
   {

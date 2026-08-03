@@ -2,38 +2,9 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
-import { sdk } from "@lib/config"
-import { HttpTypes } from "@medusajs/types"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 
 // Map de cores padrão com hexadecimais correspondentes
-const COLOR_HEX_MAP: Record<string, string> = {
-  preto: "#1a1a1a",
-  black: "#1a1a1a",
-  branco: "#ffffff",
-  white: "#ffffff",
-  "off white": "#faf9f6",
-  offwhite: "#faf9f6",
-  rosa: "#E8A0B4",
-  pink: "#E8A0B4",
-  bege: "#D3B691",
-  beige: "#D3B691",
-  areia: "#D3B691",
-  azul: "#7FA9C4",
-  blue: "#7FA9C4",
-  "azul claro": "#A0C4DF",
-  "azul escuro": "#2C4C6E",
-  verde: "#7EB8A4",
-  green: "#7EB8A4",
-  marrom: "#8B5E3C",
-  brown: "#8B5E3C",
-  vermelho: "#C75B5B",
-  red: "#C75B5B",
-  "jeans claro": "#A2C4E5",
-  "jeans médio": "#5B8FB9",
-  "jeans escuro": "#2B4C7E",
-  jeans: "#5B8FB9",
-}
 
 const DEFAULT_FALLBACK_COLORS = [
   { label: "Preto", value: "preto", hex: "#1a1a1a" },
@@ -231,11 +202,15 @@ function ShowMoreBtn({
 
 export default function CategorySidebar({
   categoryName,
-  subcategorySlug,
+  subcategorySlug: _subcategorySlug,
   allowedJeansColorsOnly,
-  categoryId,
-  countryCode,
+  categoryId: _categoryId,
+  countryCode: _countryCode,
   sortBy = "created_at",
+  availableColors: propsColors,
+  availableSizes: propsSizes,
+  minCalculatedPrice: propsMinPrice,
+  maxCalculatedPrice: propsMaxPrice,
 }: {
   categoryName: string
   subcategorySlug?: string
@@ -243,18 +218,33 @@ export default function CategorySidebar({
   categoryId?: string
   countryCode?: string
   sortBy?: SortOptions
+  availableColors?: ColorOption[]
+  availableSizes?: SizeOption[]
+  minCalculatedPrice?: number
+  maxCalculatedPrice?: number
 }) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  // Dynamic filter state
-  const [availableColors, setAvailableColors] = useState<ColorOption[]>(DEFAULT_FALLBACK_COLORS)
-  const [availableSizes, setAvailableSizes] = useState<SizeOption[]>(
-    DEFAULT_FALLBACK_SIZES.map((s) => ({ label: s, value: s }))
-  )
-  const [minCalculatedPrice, setMinCalculatedPrice] = useState<number>(0)
-  const [maxCalculatedPrice, setMaxCalculatedPrice] = useState<number>(500)
+  const availableColors =
+    propsColors && propsColors.length > 0
+      ? propsColors
+      : allowedJeansColorsOnly
+      ? [
+          { label: "Jeans Claro", value: "jeans claro", hex: "#A2C4E5" },
+          { label: "Jeans Médio", value: "jeans médio", hex: "#5B8FB9" },
+          { label: "Jeans Escuro", value: "jeans escuro", hex: "#2B4C7E" },
+        ]
+      : DEFAULT_FALLBACK_COLORS
+
+  const availableSizes =
+    propsSizes && propsSizes.length > 0
+      ? propsSizes
+      : DEFAULT_FALLBACK_SIZES.map((s) => ({ label: s, value: s }))
+
+  const minCalculatedPrice = propsMinPrice !== undefined ? propsMinPrice : 0
+  const maxCalculatedPrice = propsMaxPrice !== undefined ? propsMaxPrice : 500
 
   // Mobile drawer state
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
@@ -281,113 +271,6 @@ export default function CategorySidebar({
     setPriceMin(searchParams.get("priceMin") || "")
     setPriceMax(searchParams.get("priceMax") || "")
   }, [searchParams])
-
-  // ── Extração dinâmica de opções a partir dos produtos do Medusa ────────────
-  useEffect(() => {
-    let isMounted = true
-
-    async function fetchDynamicFilters() {
-      if (!categoryId) return
-
-      try {
-        const query: Record<string, unknown> = {
-          category_id: [categoryId],
-          fields: "*options,*options.values,*variants,*variants.calculated_price",
-          limit: 100,
-        }
-
-        const res = await sdk.client.fetch<{ products: HttpTypes.StoreProduct[] }>(
-          "/store/products",
-          { query, cache: "no-store" }
-        )
-
-        if (!isMounted) return
-
-        const products = res.products || []
-        const colorMap = new Map<string, ColorOption>()
-        const sizeMap = new Map<string, SizeOption>()
-        let lowestPrice: number | null = null
-        let highestPrice: number | null = null
-
-        products.forEach((prod) => {
-          prod.variants?.forEach((v) => {
-            if (v.calculated_price?.calculated_amount) {
-              const amount = v.calculated_price.calculated_amount
-              if (lowestPrice === null || amount < lowestPrice) {
-                lowestPrice = amount
-              }
-              if (highestPrice === null || amount > highestPrice) {
-                highestPrice = amount
-              }
-            }
-          })
-
-          prod.options?.forEach((opt) => {
-            const titleLower = opt.title?.toLowerCase() || ""
-            if (titleLower.includes("cor") || titleLower.includes("color")) {
-              opt.values?.forEach((val) => {
-                const valStr = val.value?.trim() || ""
-                const valLower = valStr.toLowerCase()
-
-                if (allowedJeansColorsOnly && !valLower.includes("jeans")) {
-                  return
-                }
-
-                if (!colorMap.has(valLower)) {
-                  colorMap.set(valLower, {
-                    label: valStr,
-                    value: valLower,
-                    hex: COLOR_HEX_MAP[valLower] || "#cccccc",
-                  })
-                }
-              })
-            } else if (titleLower.includes("tamanho") || titleLower.includes("size")) {
-              opt.values?.forEach((val) => {
-                const valStr = val.value?.trim() || ""
-                const valLower = valStr.toLowerCase()
-                if (!sizeMap.has(valLower)) {
-                  sizeMap.set(valLower, {
-                    label: valStr,
-                    value: valLower,
-                  })
-                }
-              })
-            }
-          })
-        })
-
-        if (colorMap.size > 0) {
-          setAvailableColors(Array.from(colorMap.values()))
-        } else if (allowedJeansColorsOnly) {
-          setAvailableColors([
-            { label: "Jeans Claro", value: "jeans claro", hex: "#A2C4E5" },
-            { label: "Jeans Médio", value: "jeans médio", hex: "#5B8FB9" },
-            { label: "Jeans Escuro", value: "jeans escuro", hex: "#2B4C7E" },
-          ])
-        }
-
-        if (sizeMap.size > 0) {
-          setAvailableSizes(Array.from(sizeMap.values()))
-        }
-
-        if (lowestPrice !== null) {
-          setMinCalculatedPrice(lowestPrice)
-        }
-
-        if (highestPrice !== null) {
-          setMaxCalculatedPrice(Math.max(highestPrice, (lowestPrice || 0) + 100))
-        }
-      } catch (err) {
-        console.error("Erro ao buscar filtros dinâmicos:", err)
-      }
-    }
-
-    fetchDynamicFilters()
-
-    return () => {
-      isMounted = false
-    }
-  }, [categoryId, allowedJeansColorsOnly])
 
   const updateQuery = useCallback(
     (updater: (params: URLSearchParams) => void) => {

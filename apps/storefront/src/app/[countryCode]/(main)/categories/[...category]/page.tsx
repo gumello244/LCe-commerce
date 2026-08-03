@@ -2,11 +2,12 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { getCategoryByHandle, listCategories } from "@lib/data/categories"
+import { getCategoryFilterOptions } from "@lib/data/products"
 import { listRegions } from "@lib/data/regions"
 import { HttpTypes, StoreRegion } from "@medusajs/types"
 import CategoryTemplate from "@modules/categories/templates"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
-import { parseOptionValueIds } from "@lib/util/product-option-filters"
+import { resolveOptionValueIds } from "@lib/util/product-option-filters"
 
 type Props = {
   params: Promise<{ category: string[]; countryCode: string }>
@@ -14,6 +15,8 @@ type Props = {
     Record<string, string | string[] | undefined> & {
       sortBy?: SortOptions
       page?: string
+      color?: string | string[]
+      size?: string | string[]
       optionValueIds?: string | string[]
     }
   >
@@ -51,12 +54,11 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   try {
     const productCategory = await getCategoryByHandle(params.category)
 
-    const title = productCategory.name + " | Medusa Store"
-
-    const description = productCategory.description ?? `${title} category.`
+    const title = `${productCategory.name} | Louise Castelatto`
+    const description = productCategory.description ?? `${productCategory.name} - Louise Castelatto`
 
     return {
-      title: `${title} | Medusa Store`,
+      title,
       description,
       alternates: {
         canonical: `${params.category.join("/")}`,
@@ -71,13 +73,18 @@ export default async function CategoryPage(props: Props) {
   const searchParams = await props.searchParams
   const params = await props.params
   const { sortBy, page } = searchParams
-  const optionValueIds = parseOptionValueIds(searchParams)
 
   const productCategory = await getCategoryByHandle(params.category)
 
   if (!productCategory) {
     notFound()
   }
+
+  const filterData = await getCategoryFilterOptions({
+    categoryId: productCategory.id,
+    countryCode: params.countryCode,
+  })
+  const optionValueIds = resolveOptionValueIds(searchParams, filterData.optionValueMap)
 
   return (
     <CategoryTemplate

@@ -6,10 +6,11 @@ import PaginatedProducts from "@modules/store/templates/paginated-products"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import { HttpTypes } from "@medusajs/types"
 import { OptionValueIds } from "@lib/util/product-option-filters"
+import { getCategoryFilterOptions } from "@lib/data/products"
 import CategorySidebar from "@modules/categories/components/category-sidebar"
 import CategorySortDropdown from "@modules/categories/components/category-sort-dropdown"
 
-export default function CategoryTemplate({
+export default async function CategoryTemplate({
   category,
   sortBy,
   page,
@@ -26,6 +27,11 @@ export default function CategoryTemplate({
   const sort = sortBy || "created_at"
 
   if (!category || !countryCode) notFound()
+
+  const filterData = await getCategoryFilterOptions({
+    categoryId: category.id,
+    countryCode,
+  })
 
   return (
     <div
@@ -46,7 +52,16 @@ export default function CategoryTemplate({
           </div>
         }
       >
-        <CategorySidebar categoryName={category.name} />
+        <CategorySidebar
+          categoryName={category.name}
+          categoryId={category.id}
+          countryCode={countryCode}
+          sortBy={sort}
+          availableColors={filterData.availableColors}
+          availableSizes={filterData.availableSizes}
+          minCalculatedPrice={filterData.minCalculatedPrice}
+          maxCalculatedPrice={filterData.maxCalculatedPrice}
+        />
       </Suspense>
 
       {/* ── Main content ─────────────────────────────────────────── */}

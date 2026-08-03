@@ -21,16 +21,15 @@ module.exports = {
       },
       colors: {
         brand: {
-          // Paleta Louise Castelatto
-          pink: "#E88BA9",
-          teal: "#52998F",
-          bg: "#E1E8EB",
-          // Paleta de Cores Verão / Tintas
-          ronronar: "#84A999",
-          hortela: "#C8DCD3",
-          "cubo-rosa": "#F7D4CE",
-          "rosa-pink": "#EED7DF",
-          biscoito: "#D3B691",
+          // Paleta Louise Castelatto Mapeada por Variáveis CSS
+          pink: "var(--brand-pink, #E88BA9)",
+          teal: "var(--brand-primary, #52998F)",
+          bg: "var(--brand-hortela, #E1E8EB)",
+          ronronar: "var(--brand-ronronar, #84A999)",
+          hortela: "var(--brand-hortela, #C8DCD3)",
+          "cubo-rosa": "var(--brand-cubo-rosa, #F7D4CE)",
+          "rosa-pink": "var(--brand-rosa-pink, #EED7DF)",
+          biscoito: "var(--brand-biscoito, #D3B691)",
         },
         grey: {
           0: "#FFFFFF",

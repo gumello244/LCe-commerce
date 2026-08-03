@@ -123,7 +123,7 @@ export default function MobileBottomNav() {
 
           {/* Busca */}
           <LocalizedClientLink
-            href="/store"
+            href="/search"
             className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-brand-teal transition-colors"
             data-testid="mobile-nav-search"
           >

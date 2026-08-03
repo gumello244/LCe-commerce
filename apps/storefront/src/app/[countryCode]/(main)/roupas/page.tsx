@@ -1,7 +1,8 @@
 import { Metadata } from "next"
 import { Suspense } from "react"
 
-import { parseOptionValueIds } from "@lib/util/product-option-filters"
+import { getCategoryFilterOptions } from "@lib/data/products"
+import { resolveOptionValueIds } from "@lib/util/product-option-filters"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import CategorySidebar from "@modules/categories/components/category-sidebar"
 import CategorySortDropdown from "@modules/categories/components/category-sort-dropdown"
@@ -13,12 +14,14 @@ import { MAIN_CATEGORIES } from "@lib/constants/nav-categories"
 export const metadata: Metadata = {
   title: "Roupas | Louise Castelatto",
   description:
-    "Explore toda a coleção de roupas Louise Castelatto — blusas, vestidos, moda frio, calças, shorts e saias.",
+    "Explore toda a coleção de roupas Louise Castelatto — blusas, vestidos, conjuntos, calças, shorts e saias.",
 }
 
 type SearchParams = Record<string, string | string[] | undefined> & {
   sortBy?: SortOptions
   page?: string
+  color?: string | string[]
+  size?: string | string[]
   optionValueIds?: string | string[]
 }
 
@@ -33,7 +36,11 @@ export default async function RoupasPage(props: Props) {
   const { sortBy, page } = searchParams
   const sort: SortOptions = sortBy || "created_at"
   const pageNumber = page ? parseInt(page) : 1
-  const optionValueIds = parseOptionValueIds(searchParams)
+
+  const filterData = await getCategoryFilterOptions({
+    countryCode: params.countryCode,
+  })
+  const optionValueIds = resolveOptionValueIds(searchParams, filterData.optionValueMap)
 
   return (
     <div className="flex flex-col small:flex-row gap-8 py-8 px-4 small:px-8 max-w-[1400px] mx-auto w-full min-h-screen">
@@ -49,7 +56,14 @@ export default async function RoupasPage(props: Props) {
           </div>
         }
       >
-        <CategorySidebar categoryName="Roupas" countryCode={params.countryCode} />
+        <CategorySidebar
+          categoryName="Roupas"
+          countryCode={params.countryCode}
+          availableColors={filterData.availableColors}
+          availableSizes={filterData.availableSizes}
+          minCalculatedPrice={filterData.minCalculatedPrice}
+          maxCalculatedPrice={filterData.maxCalculatedPrice}
+        />
       </Suspense>
 
       {/* ── Conteúdo principal ───────────────────────────────────────── */}

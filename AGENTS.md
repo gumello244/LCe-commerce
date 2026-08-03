@@ -152,3 +152,9 @@ claude mcp add --transport http medusa https://docs.medusajs.com/mcp # or agent 
 - `.env` / `.env.local` — never commit, print, or copy secret values out of them. Edit `.env.template` instead when documenting a new variable.
 - Existing migrations in `src/modules/*/migrations/` — add a new migration rather than rewriting one that may already have run.
 - Don't run destructive DB commands (drops, `db:migrate --help`-style flags that reset state) against the user's database without explicit confirmation.
+
+## Mandatory Agent Rule: Test Drive & End-to-End Verification
+
+- **Test Drive & Validation Policy**: Do NOT automatically run browser subagents / test drives for small or routine code changes. Apply changes directly and respond quickly. Ask the user first before running a visual "test drive", or reserve automated browser verification for major feature deliverables when explicitly requested or confirmed by the user.
+
+

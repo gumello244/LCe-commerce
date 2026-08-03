@@ -1,3 +1,5 @@
+"use client"
+
 import { HttpTypes } from "@medusajs/types"
 import { clx } from "@modules/common/components/ui"
 import React from "react"
@@ -5,7 +7,7 @@ import React from "react"
 type OptionSelectProps = {
   option: HttpTypes.StoreProductOption
   current: string | undefined
-  updateOption: (title: string, value: string) => void
+  updateOption: (optionId: string, value: string) => void
   title: string
   disabled: boolean
   "data-testid"?: string
@@ -22,23 +24,29 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
   const filteredOptions = (option.values ?? []).map((v) => v.value)
 
   return (
-    <div className="flex flex-col gap-y-3">
-      <span className="text-sm">Select {title}</span>
+    <div className="flex flex-col gap-y-2.5">
+      <div className="flex items-center justify-between text-xs tracking-wider">
+        <span className="font-bold text-gray-900 uppercase">
+          {title}: <span className="font-normal text-gray-600 normal-case">{current || "Selecione"}</span>
+        </span>
+      </div>
+
       <div
-        className="flex flex-wrap justify-between gap-2"
+        className="flex flex-wrap gap-2"
         data-testid={dataTestId}
       >
         {filteredOptions.map((v) => {
+          const isSelected = v === current
           return (
             <button
+              type="button"
               onClick={() => updateOption(option.id, v)}
               key={v}
               className={clx(
-                "border-ui-border-base bg-ui-bg-subtle border text-small-regular h-10 rounded-rounded p-2 flex-1 ",
+                "min-w-[48px] px-3.5 h-9 rounded-md text-xs font-medium border transition-all duration-150 flex items-center justify-center cursor-pointer",
                 {
-                  "border-ui-border-interactive": v === current,
-                  "hover:shadow-elevation-card-rest transition-shadow ease-in-out duration-150":
-                    v !== current,
+                  "border-brand-teal bg-brand-teal text-white shadow-xs font-semibold scale-[1.02]": isSelected,
+                  "border-gray-200 bg-white text-gray-700 hover:border-brand-teal hover:text-brand-teal": !isSelected,
                 }
               )}
               disabled={disabled}

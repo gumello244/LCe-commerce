@@ -16,7 +16,7 @@ const nextConfig = {
   reactStrictMode: true,
   logging: {
     fetches: {
-      fullUrl: true,
+      fullUrl: false,
     },
   },
   eslint: {
@@ -26,7 +26,6 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: "http",
@@ -39,6 +38,21 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "*.s3.amazonaws.com",
+      },
+      // Unsplash para imagens de produtos de demonstração
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      // Medusa public images (CDN oficial)
+      {
+        protocol: "https",
+        hostname: "medusa-public-images.s3.eu-west-1.amazonaws.com",
+      },
+      // Picsum Photos fallback
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
       },
       ...(S3_HOSTNAME && S3_PATHNAME
         ? [

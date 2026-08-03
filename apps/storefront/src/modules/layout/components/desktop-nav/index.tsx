@@ -2,14 +2,20 @@
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Image from "next/image"
+import { useParams, useRouter } from "next/navigation"
 import { ReactNode, useState, useRef } from "react"
 import { MAIN_CATEGORIES, CategoryConfig } from "@lib/constants/nav-categories"
-
-// ─── Ícones ──────────────────────────────────────────────────────────────────
+import { useNavHeader } from "@modules/layout/components/nav-header"
 
 const SearchIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-4 h-4">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-5 h-5">
     <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+  </svg>
+)
+
+const UserIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-5 h-5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
   </svg>
 )
 
@@ -19,22 +25,17 @@ const HeartIcon = () => (
   </svg>
 )
 
-const AccountIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-5 h-5">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-  </svg>
-)
-
-const ChevronDown = ({ open }: { open: boolean }) => (
+const ChevronDown = ({ open, isTransparent }: { open: boolean; isTransparent: boolean }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"
-    className={`w-3 h-3 transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
+    className={`w-3.5 h-3.5 transition-transform duration-200 ${
+      open ? "rotate-180 text-brand-teal" : isTransparent ? "text-white" : "text-gray-800"
+    }`}>
     <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
   </svg>
 )
 
-// ─── Componente de link com dropdown por categoria ────────────────────────────
-
 function CategoryDropdownNavItem({ category }: { category: CategoryConfig }) {
+  const { isTransparent } = useNavHeader()
   const [open, setOpen] = useState(false)
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -46,6 +47,10 @@ function CategoryDropdownNavItem({ category }: { category: CategoryConfig }) {
     timeout.current = setTimeout(() => setOpen(false), 120)
   }
 
+  const textColorClass = isTransparent
+    ? open ? "text-brand-teal font-semibold" : "text-white hover:text-white/80"
+    : open ? "text-brand-teal font-semibold" : "text-gray-900 hover:text-brand-teal"
+
   return (
     <div
       className="relative h-full flex items-center"
@@ -55,29 +60,26 @@ function CategoryDropdownNavItem({ category }: { category: CategoryConfig }) {
       <LocalizedClientLink
         href={category.href}
         className={`
-          flex items-center gap-1 h-full px-1 text-[11px] lg:text-xs font-semibold uppercase tracking-wider
-          border-b-2 transition-colors duration-150
-          ${open
-            ? "border-brand-teal text-brand-teal"
-            : "border-transparent text-gray-800 hover:text-brand-teal"
-          }
+          flex items-center gap-1.5 h-full px-1 py-3 text-sm lg:text-[15px] font-medium tracking-normal
+          transition-colors duration-150
+          ${textColorClass}
         `}
       >
         {category.name}
-        <ChevronDown open={open} />
+        <ChevronDown open={open} isTransparent={isTransparent} />
       </LocalizedClientLink>
 
-      {/* Dropdown */}
+      {/* Dropdown Menu */}
       <div
         className={`
           absolute top-full left-0 mt-0 z-50 bg-white shadow-xl border border-gray-100
-          rounded-b-lg min-w-[220px] py-3
+          rounded-b-xl min-w-[220px] py-3
           transition-all duration-200 origin-top
           ${open ? "opacity-100 scale-y-100 pointer-events-auto" : "opacity-0 scale-y-95 pointer-events-none"}
         `}
       >
         <div className="px-4 pb-2 mb-1 border-b border-gray-100">
-          <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">
+          <span className="text-[11px] font-bold uppercase tracking-widest text-brand-teal">
             {category.name}
           </span>
         </div>
@@ -86,123 +88,134 @@ function CategoryDropdownNavItem({ category }: { category: CategoryConfig }) {
             <li key={sub.slug}>
               <LocalizedClientLink
                 href={sub.href}
-                className="block px-4 py-2 text-xs font-medium text-gray-700 hover:bg-brand-hortela hover:text-brand-teal transition-colors duration-100"
+                className="block px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-teal transition-colors duration-100"
               >
                 {sub.name}
               </LocalizedClientLink>
             </li>
           ))}
         </ul>
-        <div className="px-4 pt-2 mt-1 border-t border-gray-100">
-          <LocalizedClientLink
-            href={category.href}
-            className="text-xs font-semibold text-brand-teal hover:underline"
-          >
-            Ver tudo em {category.name} →
-          </LocalizedClientLink>
-        </div>
       </div>
     </div>
   )
 }
-
-// ─── Componente principal ─────────────────────────────────────────────────────
 
 type DesktopNavProps = {
   cartSlot: ReactNode
 }
 
 export default function DesktopNav({ cartSlot }: DesktopNavProps) {
+  const { isTransparent } = useNavHeader()
+  const router = useRouter()
+  const params = useParams()
+  const countryCode = (params?.countryCode as string) || "br"
+
+  const [searchOpen, setSearchOpen] = useState(false)
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const query = (formData.get("q") as string)?.trim()
+    if (query) {
+      router.push(`/${countryCode}/search?q=${encodeURIComponent(query)}`)
+      setSearchOpen(false)
+    }
+  }
+
+  const textColor = isTransparent ? "text-white" : "text-gray-900"
+  const hoverColor = isTransparent ? "hover:text-white/80" : "hover:text-brand-teal"
+
   return (
-    <div className="hidden md:flex w-full h-full items-center justify-between gap-4">
-      {/* ── Esquerda: Logo PNG + Navegação principal ───────── */}
-      <div className="flex items-center gap-4 lg:gap-8 h-full">
-        {/* Logo oficial em PNG */}
-        <LocalizedClientLink
-          href="/"
-          className="flex-shrink-0 flex items-center"
-          data-testid="nav-store-link"
-        >
-          <Image
-            src="/logo.png"
-            alt="Louise Castelatto"
-            width={180}
-            height={32}
-            className="h-6 lg:h-7 w-auto object-contain"
-            priority
-          />
-        </LocalizedClientLink>
-
-        {/* Links de Navegação */}
-        <nav className="flex items-center h-full gap-4 lg:gap-6">
-          <LocalizedClientLink
-            href="/store"
-            className="text-[11px] lg:text-xs font-semibold uppercase tracking-wider text-gray-800 hover:text-brand-teal border-b-2 border-transparent hover:border-brand-teal h-full flex items-center transition-colors duration-150"
-            data-testid="nav-store-link-desktop"
-          >
-            Novidades
-          </LocalizedClientLink>
-
-          {/* 5 Dropdowns de Categorias Destacadas */}
+    <div className="flex flex-col w-full bg-transparent">
+      {/* ── SINGLE ROW HEADER: Categories (Left) | Logo (Center) | Actions (Right) ── */}
+      <div className="w-full px-6 lg:px-12 h-20 flex items-center justify-between relative">
+        
+        {/* LEFT: Category Navigation Bar */}
+        <div className={`flex items-center gap-3 lg:gap-6 text-sm lg:text-[15px] font-medium z-10 max-w-[45%] ${textColor}`}>
+          {/* Main Categories Dropdowns */}
           {MAIN_CATEGORIES.map((category) => (
             <CategoryDropdownNavItem key={category.slug} category={category} />
           ))}
+        </div>
 
+        {/* CENTER: Brand Logo */}
+        <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center z-10">
           <LocalizedClientLink
-            href="/troca-e-devolucao"
-            className="text-[11px] lg:text-xs font-semibold uppercase tracking-wider text-gray-800 hover:text-brand-teal border-b-2 border-transparent hover:border-brand-teal h-full flex items-center transition-colors duration-150"
+            href="/"
+            className="flex items-center"
+            data-testid="nav-store-link"
           >
-            Troca e Devolução
+            <Image
+              src="/logo.svg"
+              alt="Louise Castelatto"
+              width={240}
+              height={38}
+              className="h-8 lg:h-9 w-auto object-contain"
+              priority
+            />
           </LocalizedClientLink>
-        </nav>
-      </div>
+        </div>
 
-      {/* ── Direita: Campo de busca estilo Hipnoise + Ícones ─ */}
-      <div className="flex items-center gap-3 lg:gap-5 shrink-0">
-        {/* Campo de Busca */}
-        <form
-          action="/store"
-          method="GET"
-          className="relative flex items-center border border-gray-300 bg-white px-3 py-1.5 min-w-[160px] lg:min-w-[220px]"
-        >
-          <input
-            type="text"
-            name="q"
-            placeholder="O que você procura?"
-            className="w-full bg-transparent text-xs text-gray-800 placeholder-gray-400 focus:outline-none pr-6"
-          />
-          <button
-            type="submit"
-            className="absolute right-2.5 text-gray-400 hover:text-gray-700 transition-colors"
-            aria-label="Pesquisar"
+        {/* RIGHT: Search + Account + Favorites + Cart */}
+        <div className={`flex items-center gap-5 ml-auto z-10 ${textColor}`}>
+          
+          {/* Search Toggle Button / Expandable Bar */}
+          <div className="relative">
+            <button
+              onClick={() => setSearchOpen(!searchOpen)}
+              className={`p-1 ${hoverColor} transition-colors flex items-center`}
+              title="Buscar"
+              type="button"
+            >
+              <SearchIcon />
+            </button>
+
+            {/* Expandable Search Input */}
+            {searchOpen && (
+              <form
+                onSubmit={handleSearch}
+                className="absolute right-0 top-full mt-2 w-72 bg-white/95 backdrop-blur-md border border-gray-200 rounded-full shadow-lg p-1.5 flex items-center z-50 animate-in fade-in slide-in-from-top-2 duration-200 text-gray-900"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Buscar produtos..."
+                  autoFocus
+                  className="w-full bg-transparent text-xs text-gray-800 placeholder-gray-400 focus:outline-none pl-3 pr-2"
+                />
+                <button
+                  type="submit"
+                  className="p-1.5 bg-brand-teal text-white rounded-full hover:opacity-90 transition-opacity"
+                >
+                  <SearchIcon />
+                </button>
+              </form>
+            )}
+          </div>
+
+          {/* Account Icon */}
+          <LocalizedClientLink
+            href="/account"
+            className={`p-1 ${hoverColor} transition-colors flex items-center`}
+            title="Minha Conta"
           >
-            <SearchIcon />
-          </button>
-        </form>
+            <UserIcon />
+          </LocalizedClientLink>
 
-        {/* Ícone Favoritos / Coração */}
-        <LocalizedClientLink
-          href="/store"
-          className="text-gray-700 hover:text-brand-teal transition-colors"
-          aria-label="Favoritos"
-          title="Favoritos"
-        >
-          <HeartIcon />
-        </LocalizedClientLink>
+          {/* Favorites Icon */}
+          <LocalizedClientLink
+            href="/store"
+            className={`p-1 ${hoverColor} transition-colors flex items-center`}
+            title="Favoritos"
+          >
+            <HeartIcon />
+          </LocalizedClientLink>
 
-        {/* Ícone Minha Conta */}
-        <LocalizedClientLink
-          href="/account"
-          className="text-gray-700 hover:text-brand-teal transition-colors"
-          aria-label="Minha Conta"
-          title="Minha Conta"
-          data-testid="nav-account-link"
-        >
-          <AccountIcon />
-        </LocalizedClientLink>
-
-        {/* Carrinho Slot */}
-        {cartSlot}
+          {/* Cart Icon */}
+          <div className={`p-1 ${hoverColor} transition-colors flex items-center`}>
+            {cartSlot}
+          </div>
+        </div>
       </div>
     </div>
   )
