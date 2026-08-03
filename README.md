@@ -19,7 +19,7 @@ Plataforma de e-commerce **Louise Castelatto**, construída em monorepo com [Med
 - [PostgreSQL](https://www.postgresql.org/) v15+
 - npm v11+
 
-## Instalação Local
+## Instalação Local (Quick Start)
 
 ### 1. Clone o repositório e instale as dependências
 
@@ -29,71 +29,29 @@ cd LCe-commerce
 npm install
 ```
 
-### 2. Configure as variáveis de ambiente do backend
+### 2. Execute o Setup Automatizado
 
 ```bash
-cp apps/backend/.env.template apps/backend/.env
+npm run setup
 ```
+> O script cria os arquivos `.env` e `.env.local` automaticamente e inicializa os containers Docker (PostgreSQL e Redis).
 
-Edite `apps/backend/.env` e defina a URL do banco de dados:
-
-```env
-DATABASE_URL=postgres://postgres:@localhost:5432/louise-castelatto
-```
-
-### 3. Execute as migrations
+### 3. Execute as migrations e popule o banco (se primeira vez)
 
 ```bash
-cd apps/backend
-npx medusa db:migrate
+cd apps/backend && npx medusa db:migrate
+npm run backend:seed
 ```
 
-### 4. Crie o usuário administrador
+### 4. Inicie o projeto completo
 
 ```bash
-cd apps/backend
-npx medusa user -e admin@email.com -p suasenha
-```
-
-### 5. Inicie o backend
-
-```bash
-cd apps/backend
 npm run dev
 ```
 
-Acesse o painel admin em `http://localhost:9000/app`.
-Em **Settings → Publishable API Key**, copie a chave pública.
-
-### 6. Configure as variáveis de ambiente do storefront
-
-```bash
-cp apps/storefront/.env.local.template apps/storefront/.env.local
-```
-
-Edite `apps/storefront/.env.local`:
-
-```env
-NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_...
-NEXT_PUBLIC_MEDUSA_BACKEND_URL=http://localhost:9000
-```
-
-### 7. Inicie o storefront
-
-```bash
-cd apps/storefront
-npm run dev
-```
-
-A loja estará disponível em `http://localhost:8000`.
+A loja estará disponível em `http://localhost:8000` e o backend/admin em `http://localhost:9000`.
 
 ---
-
-> **Atalho:** Para rodar backend e storefront simultaneamente a partir da raiz:
->
-> ```bash
-> npm run dev
-> ```
 
 ## Scripts Disponíveis
 
@@ -101,6 +59,7 @@ Execute os comandos abaixo a partir da **raiz** do monorepo:
 
 | Comando | Descrição |
 |---|---|
+| `npm run setup` | Copia `.env` templates e inicia containers Docker |
 | `npm run dev` | Inicia backend e storefront em modo desenvolvimento |
 | `npm run backend:dev` | Inicia apenas o backend |
 | `npm run storefront:dev` | Inicia apenas o storefront |
