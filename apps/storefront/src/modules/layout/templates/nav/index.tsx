@@ -1,22 +1,22 @@
 import { Suspense } from "react"
-import Image from "next/image"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartButton from "@modules/layout/components/cart-button"
 import DesktopNav from "@modules/layout/components/desktop-nav"
+import MobileNav from "@modules/layout/components/mobile-nav"
 import NavHeader from "@modules/layout/components/nav-header"
 
 export default async function Nav() {
   return (
     <NavHeader>
-      {/* ── Desktop (md+): 2-row header inspired by ella.moda ── */}
+      {/* ── Desktop (md+): Header Mamô ── */}
       <div className="hidden md:block w-full">
         <DesktopNav
           cartSlot={
             <Suspense
               fallback={
                 <LocalizedClientLink
-                  className="text-white hover:text-white/80 transition-colors flex items-center gap-1.5 text-xs font-semibold"
+                  className="hover:opacity-80 transition-opacity flex items-center gap-1.5 text-xs font-semibold"
                   href="/cart"
                   data-testid="nav-cart-link"
                 >
@@ -33,28 +33,14 @@ export default async function Nav() {
         />
       </div>
 
-      {/* ── Mobile (< md): logo SVG perfeitamente limpo com carrinho ── */}
-      <nav className="md:hidden content-container flex items-center justify-between w-full h-16 px-4">
-        <LocalizedClientLink
-          href="/"
-          className="flex items-center"
-          data-testid="nav-store-link-mobile"
-        >
-          <Image
-            src="/logo.svg"
-            alt="Louise Castelatto"
-            width={220}
-            height={36}
-            className="h-8 w-auto object-contain"
-            priority
-          />
-        </LocalizedClientLink>
-        <div className="flex items-center gap-3">
+      {/* ── Mobile (< md): Header Responsivo com Troca Dinâmica da Logo ── */}
+      <MobileNav
+        cartSlot={
           <Suspense fallback={null}>
             <CartButton />
           </Suspense>
-        </div>
-      </nav>
+        }
+      />
     </NavHeader>
   )
 }

@@ -25,11 +25,12 @@ export default function NavHeader({ children }: NavHeaderProps) {
   const isHome = cleanPath === "" || cleanPath === "/"
 
   const [isScrolled, setIsScrolled] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const handleScroll = () => {
-      // Transiciona para branco sólido apenas quando o banner começa a sair de cena (após 320px de scroll)
-      if (window.scrollY > 320) {
+      if (window.scrollY > 100) {
         setIsScrolled(true)
       } else {
         setIsScrolled(false)
@@ -41,17 +42,16 @@ export default function NavHeader({ children }: NavHeaderProps) {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // Header em modo camaleão (100% transparente integrado ao banner) APENAS na Home enquanto o banner está visível
-  const isTransparent = isHome && !isScrolled
+  // Evita erro de Hidratação do React (SSR vs Client): no primeiro render usa o estado do servidor
+  const isTransparent = isHome && (!mounted || !isScrolled)
 
   return (
     <NavHeaderContext.Provider value={{ isTransparent }}>
       <div
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-          isTransparent
-            ? "bg-transparent border-b border-transparent shadow-none"
-            : "bg-white/95 backdrop-blur-md border-b border-gray-200/80 shadow-xs"
-        }`}
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${isTransparent
+          ? "bg-transparent border-b border-transparent shadow-none"
+          : "bg-white/95 backdrop-blur-md border-b border-gray-200/80 shadow-xs"
+          }`}
       >
         <header className="relative w-full">
           {children}

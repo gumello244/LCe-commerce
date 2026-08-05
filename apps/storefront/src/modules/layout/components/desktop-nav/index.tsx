@@ -25,14 +25,24 @@ const HeartIcon = () => (
   </svg>
 )
 
-const ChevronDown = ({ open, isTransparent }: { open: boolean; isTransparent: boolean }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"
-    className={`w-3.5 h-3.5 transition-transform duration-200 ${
-      open ? "rotate-180 text-brand-teal" : isTransparent ? "text-white" : "text-gray-800"
-    }`}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-  </svg>
-)
+const ChevronDown = ({ open, isTransparent }: { open: boolean; isTransparent: boolean }) => {
+  const colorClass = open
+    ? isTransparent ? "rotate-180 text-pink-300" : "rotate-180 text-brand-teal"
+    : isTransparent ? "text-white/80 group-hover:text-pink-200" : "text-gray-800 group-hover:text-brand-teal"
+
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={2}
+      stroke="currentColor"
+      className={`w-3.5 h-3.5 transition-transform duration-200 ${colorClass}`}
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+    </svg>
+  )
+}
 
 function CategoryDropdownNavItem({ category }: { category: CategoryConfig }) {
   const { isTransparent } = useNavHeader()
@@ -48,12 +58,12 @@ function CategoryDropdownNavItem({ category }: { category: CategoryConfig }) {
   }
 
   const textColorClass = isTransparent
-    ? open ? "text-brand-teal font-semibold" : "text-white hover:text-white/80"
+    ? open ? "text-pink-300 font-semibold" : "text-white hover:text-pink-200"
     : open ? "text-brand-teal font-semibold" : "text-gray-900 hover:text-brand-teal"
 
   return (
     <div
-      className="relative h-full flex items-center"
+      className="relative h-full flex items-center group"
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
     >
@@ -69,17 +79,20 @@ function CategoryDropdownNavItem({ category }: { category: CategoryConfig }) {
         <ChevronDown open={open} isTransparent={isTransparent} />
       </LocalizedClientLink>
 
-      {/* Dropdown Menu */}
+      {/* Topdown Dropdown Menu — Integrado ao Modo Camaleão */}
       <div
         className={`
-          absolute top-full left-0 mt-0 z-50 bg-white shadow-xl border border-gray-100
-          rounded-b-xl min-w-[220px] py-3
+          absolute top-full left-0 mt-0 z-50 rounded-b-xl min-w-[220px] py-3
           transition-all duration-200 origin-top
           ${open ? "opacity-100 scale-y-100 pointer-events-auto" : "opacity-0 scale-y-95 pointer-events-none"}
+          ${isTransparent
+            ? "bg-slate-950/85 backdrop-blur-xl border border-white/15 shadow-2xl text-white"
+            : "bg-white/95 backdrop-blur-md border border-gray-100 shadow-xl text-gray-900"
+          }
         `}
       >
-        <div className="px-4 pb-2 mb-1 border-b border-gray-100">
-          <span className="text-[11px] font-bold uppercase tracking-widest text-brand-teal">
+        <div className={`px-4 pb-2 mb-1 border-b ${isTransparent ? "border-white/10" : "border-gray-100"}`}>
+          <span className={`text-[11px] font-bold uppercase tracking-widest ${isTransparent ? "text-pink-300" : "text-brand-teal"}`}>
             {category.name}
           </span>
         </div>
@@ -88,7 +101,13 @@ function CategoryDropdownNavItem({ category }: { category: CategoryConfig }) {
             <li key={sub.slug}>
               <LocalizedClientLink
                 href={sub.href}
-                className="block px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-teal transition-colors duration-100"
+                className={`
+                  block px-4 py-2 text-xs font-medium transition-colors duration-100
+                  ${isTransparent
+                    ? "text-gray-200 hover:bg-white/10 hover:text-pink-200"
+                    : "text-gray-700 hover:bg-gray-50 hover:text-brand-teal"
+                  }
+                `}
               >
                 {sub.name}
               </LocalizedClientLink>
@@ -123,22 +142,21 @@ export default function DesktopNav({ cartSlot }: DesktopNavProps) {
   }
 
   const textColor = isTransparent ? "text-white" : "text-gray-900"
-  const hoverColor = isTransparent ? "hover:text-white/80" : "hover:text-brand-teal"
+  const hoverColor = isTransparent ? "hover:text-pink-200" : "hover:text-brand-teal"
 
   return (
     <div className="flex flex-col w-full bg-transparent">
-      {/* ── SINGLE ROW HEADER: Categories (Left) | Logo (Center) | Actions (Right) ── */}
-      <div className="w-full px-6 lg:px-12 h-20 flex items-center justify-between relative">
-        
+      {/* ── HEADER LAYOUT IGUAL À REFERÊNCIA MAMÔ: Categorias (Esquerda) | Logo (Centro) | Ícones (Direita) ── */}
+      <div className="w-full px-6 lg:px-12 h-16 flex items-center justify-between relative">
+
         {/* LEFT: Category Navigation Bar */}
         <div className={`flex items-center gap-3 lg:gap-6 text-sm lg:text-[15px] font-medium z-10 max-w-[45%] ${textColor}`}>
-          {/* Main Categories Dropdowns */}
           {MAIN_CATEGORIES.map((category) => (
             <CategoryDropdownNavItem key={category.slug} category={category} />
           ))}
         </div>
 
-        {/* CENTER: Brand Logo */}
+        {/* CENTER: Brand Logo (Centralizada no Meio - Alterna para Branco no Modo Camaleão) */}
         <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center z-10">
           <LocalizedClientLink
             href="/"
@@ -146,52 +164,43 @@ export default function DesktopNav({ cartSlot }: DesktopNavProps) {
             data-testid="nav-store-link"
           >
             <Image
-              src="/logo.svg"
+              src={isTransparent ? "/logo-white.png" : "/logo.png"}
               alt="Louise Castelatto"
-              width={240}
-              height={38}
-              className="h-8 lg:h-9 w-auto object-contain"
+              width={360}
+              height={30}
+              className="h-6 lg:h-7 w-auto object-contain transition-all duration-300"
               priority
             />
           </LocalizedClientLink>
         </div>
 
-        {/* RIGHT: Search + Account + Favorites + Cart */}
-        <div className={`flex items-center gap-5 ml-auto z-10 ${textColor}`}>
-          
-          {/* Search Toggle Button / Expandable Bar */}
-          <div className="relative">
-            <button
-              onClick={() => setSearchOpen(!searchOpen)}
-              className={`p-1 ${hoverColor} transition-colors flex items-center`}
-              title="Buscar"
-              type="button"
-            >
+        {/* RIGHT: Search Icon + Account + Favorites + Cart */}
+        <div className={`flex items-center gap-4 lg:gap-5 ml-auto z-10 ${textColor}`}>
+
+          {/* Visible Search Bar Input */}
+          <form
+            onSubmit={handleSearch}
+            className={`
+              flex items-center w-36 lg:w-52 px-3 py-1.5 rounded-full border transition-all duration-200 text-xs
+              ${
+                isTransparent
+                  ? "bg-slate-950/40 border-white/30 text-white placeholder-white/70 focus-within:border-pink-300 focus-within:bg-slate-950/70"
+                  : "bg-gray-100/90 border-gray-200 text-gray-900 placeholder-gray-400 focus-within:border-brand-teal focus-within:bg-white shadow-xs"
+              }
+            `}
+          >
+            <input
+              type="text"
+              name="q"
+              placeholder="Buscar produtos..."
+              className={`w-full bg-transparent focus:outline-none pr-1 text-xs ${
+                isTransparent ? "placeholder-white/70 text-white" : "placeholder-gray-400 text-gray-900"
+              }`}
+            />
+            <button type="submit" className={`p-0.5 ${hoverColor} transition-colors shrink-0`} title="Buscar">
               <SearchIcon />
             </button>
-
-            {/* Expandable Search Input */}
-            {searchOpen && (
-              <form
-                onSubmit={handleSearch}
-                className="absolute right-0 top-full mt-2 w-72 bg-white/95 backdrop-blur-md border border-gray-200 rounded-full shadow-lg p-1.5 flex items-center z-50 animate-in fade-in slide-in-from-top-2 duration-200 text-gray-900"
-              >
-                <input
-                  type="text"
-                  name="q"
-                  placeholder="Buscar produtos..."
-                  autoFocus
-                  className="w-full bg-transparent text-xs text-gray-800 placeholder-gray-400 focus:outline-none pl-3 pr-2"
-                />
-                <button
-                  type="submit"
-                  className="p-1.5 bg-brand-teal text-white rounded-full hover:opacity-90 transition-opacity"
-                >
-                  <SearchIcon />
-                </button>
-              </form>
-            )}
-          </div>
+          </form>
 
           {/* Account Icon */}
           <LocalizedClientLink
