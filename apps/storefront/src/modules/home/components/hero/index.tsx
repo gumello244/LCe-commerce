@@ -3,15 +3,15 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 
 const Hero = () => {
   return (
-    <section className="relative w-full aspect-[16/9] sm:aspect-[2/1] md:aspect-[2.68/1] min-h-[380px] max-h-[920px] bg-[#c3c4c8] overflow-hidden">
+    <section className="relative w-full aspect-[4/3] sm:aspect-[1.6/1] md:aspect-[3168/1344] min-h-[320px] sm:min-h-[420px] md:min-h-[520px] lg:min-h-[620px] max-h-[1080px] bg-[#c3c4c8] overflow-hidden">
       <LocalizedClientLink href="/store" className="block relative w-full h-full">
-        {/* Imagem do Banner principal em alta fidelidade (2.17MB PNG) */}
+        {/* Imagem do Banner principal expandido */}
         <Image
-          src="/images/hero-banner.png"
+          src="/images/banner-3.png"
           alt="Últimos Lançamentos — Louise Castelatto"
           fill
           priority
-          unoptimized
+          quality={100}
           sizes="100vw"
           className="object-cover object-center"
         />

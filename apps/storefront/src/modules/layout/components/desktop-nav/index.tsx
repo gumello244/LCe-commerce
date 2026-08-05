@@ -8,19 +8,19 @@ import { MAIN_CATEGORIES, CategoryConfig } from "@lib/constants/nav-categories"
 import { useNavHeader } from "@modules/layout/components/nav-header"
 
 const SearchIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-5 h-5">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
     <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
   </svg>
 )
 
 const UserIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-5 h-5">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
   </svg>
 )
 
 const HeartIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-5 h-5">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
     <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
   </svg>
 )
@@ -58,8 +58,8 @@ function CategoryDropdownNavItem({ category }: { category: CategoryConfig }) {
   }
 
   const textColorClass = isTransparent
-    ? open ? "text-pink-300 font-semibold" : "text-white hover:text-pink-200"
-    : open ? "text-brand-teal font-semibold" : "text-gray-900 hover:text-brand-teal"
+    ? open ? "text-pink-200 opacity-100" : "text-white/90 hover:text-pink-200"
+    : open ? "text-brand-teal opacity-100" : "text-gray-900 hover:text-brand-teal"
 
   return (
     <div
@@ -70,16 +70,15 @@ function CategoryDropdownNavItem({ category }: { category: CategoryConfig }) {
       <LocalizedClientLink
         href={category.href}
         className={`
-          flex items-center gap-1.5 h-full px-1 py-3 text-sm lg:text-[15px] font-medium tracking-normal
+          flex items-center h-full py-2 text-xs lg:text-[14.5px] font-extralight tracking-wide whitespace-nowrap
           transition-colors duration-150
           ${textColorClass}
         `}
       >
         {category.name}
-        <ChevronDown open={open} isTransparent={isTransparent} />
       </LocalizedClientLink>
 
-      {/* Topdown Dropdown Menu — Integrado ao Modo Camaleão */}
+      {/* Topdown Dropdown Menu */}
       <div
         className={`
           absolute top-full left-0 mt-0 z-50 rounded-b-xl min-w-[220px] py-3
@@ -129,7 +128,7 @@ export default function DesktopNav({ cartSlot }: DesktopNavProps) {
   const params = useParams()
   const countryCode = (params?.countryCode as string) || "br"
 
-  const [searchOpen, setSearchOpen] = useState(false)
+  const [_searchOpen, setSearchOpen] = useState(false)
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -146,18 +145,18 @@ export default function DesktopNav({ cartSlot }: DesktopNavProps) {
 
   return (
     <div className="flex flex-col w-full bg-transparent">
-      {/* ── HEADER LAYOUT IGUAL À REFERÊNCIA MAMÔ: Categorias (Esquerda) | Logo (Centro) | Ícones (Direita) ── */}
-      <div className="w-full px-6 lg:px-12 h-16 flex items-center justify-between relative">
+      {/* ── HEADER LAYOUT ELEGANTE E FINO (Alinhado mais rente às bordas) ── */}
+      <div className="w-full px-3 lg:px-6 pt-[18px] pb-3 flex items-center justify-between relative">
 
-        {/* LEFT: Category Navigation Bar */}
-        <div className={`flex items-center gap-3 lg:gap-6 text-sm lg:text-[15px] font-medium z-10 max-w-[45%] ${textColor}`}>
+        {/* LEFT: Category Navigation Bar (Mais próximas umas das outras) */}
+        <div className={`flex items-center gap-3.5 lg:gap-5 z-10 max-w-[45%] ${textColor}`}>
           {MAIN_CATEGORIES.map((category) => (
             <CategoryDropdownNavItem key={category.slug} category={category} />
           ))}
         </div>
 
-        {/* CENTER: Brand Logo (Centralizada no Meio - Alterna para Branco no Modo Camaleão) */}
-        <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center z-10">
+        {/* CENTER: Brand Logo */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-[21px] flex items-center justify-center z-10">
           <LocalizedClientLink
             href="/"
             className="flex items-center"
@@ -166,9 +165,9 @@ export default function DesktopNav({ cartSlot }: DesktopNavProps) {
             <Image
               src={isTransparent ? "/logo-white.png" : "/logo.png"}
               alt="Louise Castelatto"
-              width={360}
-              height={30}
-              className="h-6 lg:h-7 w-auto object-contain transition-all duration-300"
+              width={1024}
+              height={118}
+              className="h-5 lg:h-6 w-auto object-contain transition-all duration-300"
               priority
             />
           </LocalizedClientLink>
@@ -181,11 +180,10 @@ export default function DesktopNav({ cartSlot }: DesktopNavProps) {
           <form
             onSubmit={handleSearch}
             className={`
-              flex items-center w-36 lg:w-52 px-3 py-1.5 rounded-full border transition-all duration-200 text-xs
-              ${
-                isTransparent
-                  ? "bg-slate-950/40 border-white/30 text-white placeholder-white/70 focus-within:border-pink-300 focus-within:bg-slate-950/70"
-                  : "bg-gray-100/90 border-gray-200 text-gray-900 placeholder-gray-400 focus-within:border-brand-teal focus-within:bg-white shadow-xs"
+              flex items-center w-36 lg:w-48 px-3 py-1 rounded-full border transition-all duration-200 text-xs
+              ${isTransparent
+                ? "bg-slate-950/40 border-white/30 text-white placeholder-white/70 focus-within:border-pink-300 focus-within:bg-slate-950/70"
+                : "bg-gray-100/90 border-gray-200 text-gray-900 placeholder-gray-400 focus-within:border-brand-teal focus-within:bg-white shadow-xs"
               }
             `}
           >
@@ -193,9 +191,8 @@ export default function DesktopNav({ cartSlot }: DesktopNavProps) {
               type="text"
               name="q"
               placeholder="Buscar produtos..."
-              className={`w-full bg-transparent focus:outline-none pr-1 text-xs ${
-                isTransparent ? "placeholder-white/70 text-white" : "placeholder-gray-400 text-gray-900"
-              }`}
+              className={`w-full bg-transparent focus:outline-none pr-1 text-xs ${isTransparent ? "placeholder-white/70 text-white" : "placeholder-gray-400 text-gray-900"
+                }`}
             />
             <button type="submit" className={`p-0.5 ${hoverColor} transition-colors shrink-0`} title="Buscar">
               <SearchIcon />

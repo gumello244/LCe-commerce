@@ -19,8 +19,8 @@ export default function MobileNav({ cartSlot }: { cartSlot: ReactNode }) {
         <Image
           src={isTransparent ? "/logo-white.png" : "/logo.png"}
           alt="Louise Castelatto"
-          width={360}
-          height={30}
+          width={1024}
+          height={118}
           className="h-7 w-auto object-contain transition-all duration-300"
           priority
         />

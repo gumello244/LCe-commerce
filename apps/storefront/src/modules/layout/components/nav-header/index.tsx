@@ -53,14 +53,14 @@ export default function NavHeader({ children }: NavHeaderProps) {
           : "bg-white/95 backdrop-blur-md border-b border-gray-200/80 shadow-xs"
           }`}
       >
-        <header className="relative w-full">
+        <header className="relative w-full font-[family-name:var(--font-jhc-sineas)]">
           {children}
         </header>
       </div>
 
       {/* Espaçador para páginas que não são a Home, garantindo que o conteúdo não fique escondido sob o header fixo */}
       {!isHome && (
-        <div className="h-16 md:h-20 w-full shrink-0" aria-hidden="true" />
+        <div className="h-[54px] w-full shrink-0" aria-hidden="true" />
       )}
     </NavHeaderContext.Provider>
   )

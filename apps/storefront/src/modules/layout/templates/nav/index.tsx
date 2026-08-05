@@ -6,9 +6,14 @@ import DesktopNav from "@modules/layout/components/desktop-nav"
 import MobileNav from "@modules/layout/components/mobile-nav"
 import NavHeader from "@modules/layout/components/nav-header"
 
+import AnnouncementBar from "@modules/layout/components/announcement-bar"
+
 export default async function Nav() {
   return (
     <NavHeader>
+      {/* ── Faixa de Anúncios no Topo (Modo Camaleão) ── */}
+      <AnnouncementBar />
+
       {/* ── Desktop (md+): Header Mamô ── */}
       <div className="hidden md:block w-full">
         <DesktopNav
