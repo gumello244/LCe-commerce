@@ -93,6 +93,17 @@ export const listProducts = async ({
         queryParams,
       }
     })
+    .catch((err) => {
+      console.error("Error in listProducts fetch:", err)
+      return {
+        response: {
+          products: [],
+          count: 0,
+        },
+        nextPage: null,
+        queryParams,
+      }
+    })
 }
 
 const COLOR_HEX_MAP: Record<string, string> = {

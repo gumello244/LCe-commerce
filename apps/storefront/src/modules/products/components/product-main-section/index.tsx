@@ -32,7 +32,7 @@ export default function ProductMainSection({
   }
 
   return (
-    <div className="max-w-[1360px] mx-auto px-4 md:px-8 py-6 md:py-10">
+    <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-6 md:py-10">
       {/* ── Breadcrumbs ────────────────────────────────────────────── */}
       <div className="flex items-center gap-2 text-xs text-gray-400 mb-6">
         <LocalizedClientLink href="/" className="hover:text-gray-600">
@@ -59,10 +59,10 @@ export default function ProductMainSection({
         </span>
       </div>
 
-      {/* ── Main 2-Column Product Layout (Código Girls inspired) ─────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Image Gallery with vertical thumbnails (7 cols) */}
-        <div className="lg:col-span-7 w-full">
+      {/* ── Main 50/50 Fluid Product Layout (Estilo AMARO / Zara) ────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-start w-full">
+        {/* Left Column: Image Gallery (50% da Tela) */}
+        <div className="w-full">
           <ImageGallery
             images={images}
             selectedVariant={selectedVariant}
@@ -70,8 +70,8 @@ export default function ProductMainSection({
           />
         </div>
 
-        {/* Right Column: Product Actions & Details Sticky Panel (5 cols) */}
-        <div className="lg:col-span-5 w-full lg:sticky lg:top-28 space-y-6">
+        {/* Right Column: Product Actions & Details Sticky Panel (50% da Tela) */}
+        <div className="w-full lg:sticky lg:top-28 space-y-6">
           <ProductActions
             product={product}
             region={region}

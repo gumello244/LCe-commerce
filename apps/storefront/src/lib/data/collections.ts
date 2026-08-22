@@ -18,6 +18,10 @@ export const retrieveCollection = async (id: string) => {
       }
     )
     .then(({ collection }) => collection)
+    .catch((err) => {
+      console.error(`Error in retrieveCollection (${id}):`, err)
+      return null
+    })
 }
 
 export const listCollections = async (
@@ -40,6 +44,10 @@ export const listCollections = async (
       }
     )
     .then(({ collections }) => ({ collections, count: collections.length }))
+    .catch((err) => {
+      console.error("Error in listCollections:", err)
+      return { collections: [], count: 0 }
+    })
 }
 
 export const getCollectionByHandle = async (
@@ -56,4 +64,8 @@ export const getCollectionByHandle = async (
       cache: "force-cache",
     })
     .then(({ collections }) => collections[0] || null)
+    .catch((err) => {
+      console.error(`Error in getCollectionByHandle (${handle}):`, err)
+      return null
+    })
 }

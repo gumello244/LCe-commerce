@@ -25,6 +25,10 @@ export const listCategories = async (query?: Record<string, unknown>) => {
       }
     )
     .then(({ product_categories }) => product_categories)
+    .catch((err) => {
+      console.error("Error in listCategories fetch:", err)
+      return []
+    })
 }
 
 export const getCategoryByHandle = async (categoryHandle: string[]) => {
@@ -47,5 +51,9 @@ export const getCategoryByHandle = async (categoryHandle: string[]) => {
           process.env.NODE_ENV === "development" ? "no-store" : "force-cache",
       }
     )
-    .then(({ product_categories }) => product_categories[0])
+    .then(({ product_categories }) => product_categories[0] || null)
+    .catch((err) => {
+      console.error(`Error in getCategoryByHandle (${handle}) fetch:`, err)
+      return null
+    })
 }

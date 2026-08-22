@@ -25,24 +25,6 @@ const HeartIcon = () => (
   </svg>
 )
 
-const ChevronDown = ({ open, isTransparent }: { open: boolean; isTransparent: boolean }) => {
-  const colorClass = open
-    ? isTransparent ? "rotate-180 text-pink-300" : "rotate-180 text-brand-teal"
-    : isTransparent ? "text-white/80 group-hover:text-pink-200" : "text-gray-800 group-hover:text-brand-teal"
-
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={2}
-      stroke="currentColor"
-      className={`w-3.5 h-3.5 transition-transform duration-200 ${colorClass}`}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-    </svg>
-  )
-}
 
 function CategoryDropdownNavItem({ category }: { category: CategoryConfig }) {
   const { isTransparent } = useNavHeader()

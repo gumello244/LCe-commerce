@@ -70,29 +70,38 @@ function getImagesForVariant(
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
-  const params = await props.params
-  const { handle, countryCode } = params
+  try {
+    const params = await props.params
+    const { handle, countryCode } = params
 
-  const [region, product] = await Promise.all([
-    getRegion(countryCode),
-    listProducts({
-      countryCode,
-      queryParams: { handle },
-    }).then(({ response }) => response.products[0]),
-  ])
+    const [region, product] = await Promise.all([
+      getRegion(countryCode),
+      listProducts({
+        countryCode,
+        queryParams: { handle },
+      }).then(({ response }) => response.products?.[0]),
+    ])
 
-  if (!region || !product) {
-    notFound()
-  }
+    if (!region || !product) {
+      return {
+        title: "Produto | Louise Castelatto",
+      }
+    }
 
-  return {
-    title: `${product.title} | Louise Castelatto`,
-    description: `${product.title}`,
-    openGraph: {
+    return {
       title: `${product.title} | Louise Castelatto`,
       description: `${product.title}`,
-      images: product.thumbnail ? [product.thumbnail] : [],
-    },
+      openGraph: {
+        title: `${product.title} | Louise Castelatto`,
+        description: `${product.title}`,
+        images: product.thumbnail ? [product.thumbnail] : [],
+      },
+    }
+  } catch (error) {
+    console.error("Error generating product metadata:", error)
+    return {
+      title: "Produto | Louise Castelatto",
+    }
   }
 }
 
@@ -103,13 +112,22 @@ export default async function ProductPage(props: Props) {
   ])
   const selectedVariantId = searchParams.v_id
 
-  const [region, pricedProduct] = await Promise.all([
-    getRegion(params.countryCode),
-    listProducts({
-      countryCode: params.countryCode,
-      queryParams: { handle: params.handle },
-    }).then(({ response }) => response.products[0]),
-  ])
+  let region: HttpTypes.StoreRegion | null | undefined = null
+  let pricedProduct: HttpTypes.StoreProduct | null | undefined = null
+
+  try {
+    const [fetchedRegion, fetchedProduct] = await Promise.all([
+      getRegion(params.countryCode),
+      listProducts({
+        countryCode: params.countryCode,
+        queryParams: { handle: params.handle },
+      }).then(({ response }) => response.products?.[0]),
+    ])
+    region = fetchedRegion
+    pricedProduct = fetchedProduct
+  } catch (error) {
+    console.error("Error loading product page:", error)
+  }
 
   if (!region || !pricedProduct) {
     notFound()
