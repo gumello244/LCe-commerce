@@ -58,6 +58,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "picsum.photos",
       },
+      // Cloudflare R2 public bucket
+      {
+        protocol: "https",
+        hostname: "*.r2.dev",
+      },
       ...(S3_HOSTNAME && S3_PATHNAME
         ? [
             {

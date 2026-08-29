@@ -16,5 +16,28 @@ module.exports = defineConfig({
       jwtSecret: process.env.JWT_SECRET,
       cookieSecret: process.env.COOKIE_SECRET,
     }
-  }
+  },
+  modules: [
+    {
+      resolve: "@medusajs/medusa/file",
+      options: {
+        providers: [
+          {
+            resolve: "@medusajs/file-s3",
+            id: "s3",
+            options: {
+              file_url: process.env.R2_FILE_URL,
+              access_key_id: process.env.R2_ACCESS_KEY_ID,
+              secret_access_key: process.env.R2_SECRET_ACCESS_KEY,
+              region: process.env.R2_REGION,
+              bucket: process.env.R2_BUCKET,
+              endpoint: process.env.R2_ENDPOINT,
+            }
+          }
+        ]
+      }
+    }
+  ]
 })
+
+
