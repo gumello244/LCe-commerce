@@ -28,8 +28,13 @@ export default async function CategoryTemplate({
 
   if (!category || !countryCode) notFound()
 
+  const categoryIds = [
+    category.id,
+    ...(category.category_children?.map((c) => c.id) || []),
+  ]
+
   const filterData = await getCategoryFilterOptions({
-    categoryId: category.id,
+    categoryId: categoryIds,
     countryCode,
   })
 
@@ -104,7 +109,7 @@ export default async function CategoryTemplate({
           <PaginatedProducts
             sortBy={sort}
             page={pageNumber}
-            categoryId={category.id}
+            categoryId={categoryIds}
             countryCode={countryCode}
             optionValueIds={optionValueIds}
           />

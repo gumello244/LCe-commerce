@@ -32,28 +32,38 @@ export const listCategories = async (query?: Record<string, unknown>) => {
 }
 
 export const getCategoryByHandle = async (categoryHandle: string[]) => {
-  const handle = `${categoryHandle.join("/")}`
+  const leafHandle = categoryHandle[categoryHandle.length - 1]
+  const fullHandle = categoryHandle.join("/")
 
   const next = {
     ...(await getCacheOptions("categories")),
   }
 
-  return sdk.client
-    .fetch<HttpTypes.StoreProductCategoryListResponse>(
-      `/store/product-categories`,
-      {
-        query: {
-          fields: "*category_children, *products",
-          handle,
-        },
-        next,
-        cache:
-          process.env.NODE_ENV === "development" ? "no-store" : "force-cache",
-      }
-    )
-    .then(({ product_categories }) => product_categories[0] || null)
-    .catch((err) => {
-      console.error(`Error in getCategoryByHandle (${handle}) fetch:`, err)
-      return null
-    })
+  const fetchByHandle = async (h: string) => {
+    return sdk.client
+      .fetch<HttpTypes.StoreProductCategoryListResponse>(
+        `/store/product-categories`,
+        {
+          query: {
+            fields: "*category_children, *products",
+            handle: h,
+          },
+          next,
+          cache:
+            process.env.NODE_ENV === "development" ? "no-store" : "force-cache",
+        }
+      )
+      .then(({ product_categories }) => product_categories[0] || null)
+      .catch((err) => {
+        console.error(`Error in getCategoryByHandle (${h}) fetch:`, err)
+        return null
+      })
+  }
+
+  const category = await fetchByHandle(leafHandle)
+  if (category) return category
+  if (leafHandle !== fullHandle) {
+    return await fetchByHandle(fullHandle)
+  }
+  return null
 }

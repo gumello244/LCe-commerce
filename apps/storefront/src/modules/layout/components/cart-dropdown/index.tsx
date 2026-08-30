@@ -15,14 +15,12 @@ import LineItemPrice from "@modules/common/components/line-item-price"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Thumbnail from "@modules/products/components/thumbnail"
 import { Fragment, useEffect, useRef, useState } from "react"
-import { useNavHeader } from "@modules/layout/components/nav-header"
 
 const CartDropdown = ({
   cart: cartState,
 }: {
   cart?: HttpTypes.StoreCart | null
 }) => {
-  const { isTransparent } = useNavHeader()
   const [activeTimer, setActiveTimer] = useState<NodeJS.Timer | undefined>(
     undefined
   )
@@ -83,11 +81,9 @@ const CartDropdown = ({
       onMouseLeave={close}
     >
       <Popover className="relative h-full">
-        <PopoverButton className="h-full flex items-center">
+        <PopoverButton as="div" className="h-full flex items-center cursor-pointer">
           <LocalizedClientLink
-            className={`relative flex items-center gap-1 text-xs font-extralight transition-colors ${
-              isTransparent ? "text-white hover:text-white/80" : "text-gray-900 hover:text-brand-teal"
-            }`}
+            className="relative flex items-center gap-1 text-xs font-extralight transition-colors text-inherit hover:opacity-80"
             href="/cart"
             data-testid="nav-cart-link"
           >

@@ -48,20 +48,20 @@ export default function NavHeader({ children }: NavHeaderProps) {
   return (
     <NavHeaderContext.Provider value={{ isTransparent }}>
       <div
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${isTransparent
-          ? "bg-transparent border-b border-transparent shadow-none"
-          : "bg-white/95 backdrop-blur-md border-b border-gray-200/80 shadow-xs"
-          }`}
+        className={
+          isHome
+            ? `fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+                isTransparent
+                  ? "bg-transparent border-b border-transparent shadow-none"
+                  : "bg-white/95 backdrop-blur-md border-b border-black shadow-none"
+              }`
+            : "relative w-full z-40 bg-white border-b border-black shadow-none"
+        }
       >
         <header className="relative w-full font-[family-name:var(--font-jhc-sineas)]">
           {children}
         </header>
       </div>
-
-      {/* Espaçador para páginas que não são a Home, garantindo que o conteúdo não fique escondido sob o header fixo */}
-      {!isHome && (
-        <div className="h-[54px] w-full shrink-0" aria-hidden="true" />
-      )}
     </NavHeaderContext.Provider>
   )
 }

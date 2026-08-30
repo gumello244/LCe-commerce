@@ -5,6 +5,7 @@ import Image from "next/image"
 import { useParams, useRouter } from "next/navigation"
 import { ReactNode, useState, useRef } from "react"
 import { MAIN_CATEGORIES, CategoryConfig } from "@lib/constants/nav-categories"
+import { clx } from "@modules/common/components/ui"
 import { useNavHeader } from "@modules/layout/components/nav-header"
 
 const SearchIcon = () => (
@@ -51,29 +52,26 @@ function CategoryDropdownNavItem({ category }: { category: CategoryConfig }) {
     >
       <LocalizedClientLink
         href={category.href}
-        className={`
-          flex items-center h-full py-2 text-xs lg:text-[14.5px] font-extralight tracking-wide whitespace-nowrap
-          transition-colors duration-150
-          ${textColorClass}
-        `}
+        className={clx(
+          "flex items-center h-full py-2 text-xs lg:text-[14.5px] font-extralight tracking-wide whitespace-nowrap transition-colors duration-150",
+          textColorClass
+        )}
       >
         {category.name}
       </LocalizedClientLink>
 
       {/* Topdown Dropdown Menu */}
       <div
-        className={`
-          absolute top-full left-0 mt-0 z-50 rounded-b-xl min-w-[220px] py-3
-          transition-all duration-200 origin-top
-          ${open ? "opacity-100 scale-y-100 pointer-events-auto" : "opacity-0 scale-y-95 pointer-events-none"}
-          ${isTransparent
+        className={clx(
+          "absolute top-full left-0 mt-0 z-50 rounded-b-xl min-w-[220px] py-3 transition-all duration-200 origin-top",
+          open ? "opacity-100 scale-y-100 pointer-events-auto" : "opacity-0 scale-y-95 pointer-events-none",
+          isTransparent
             ? "bg-slate-950/85 backdrop-blur-xl border border-white/15 shadow-2xl text-white"
             : "bg-white/95 backdrop-blur-md border border-gray-100 shadow-xl text-gray-900"
-          }
-        `}
+        )}
       >
-        <div className={`px-4 pb-2 mb-1 border-b ${isTransparent ? "border-white/10" : "border-gray-100"}`}>
-          <span className={`text-[11px] font-bold uppercase tracking-widest ${isTransparent ? "text-pink-300" : "text-brand-teal"}`}>
+        <div className={clx("px-4 pb-2 mb-1 border-b", isTransparent ? "border-white/10" : "border-gray-100")}>
+          <span className={clx("text-[11px] font-bold uppercase tracking-widest", isTransparent ? "text-pink-300" : "text-brand-teal")}>
             {category.name}
           </span>
         </div>
@@ -82,13 +80,12 @@ function CategoryDropdownNavItem({ category }: { category: CategoryConfig }) {
             <li key={sub.slug}>
               <LocalizedClientLink
                 href={sub.href}
-                className={`
-                  block px-4 py-2 text-xs font-medium transition-colors duration-100
-                  ${isTransparent
+                className={clx(
+                  "block px-4 py-2 text-xs font-medium transition-colors duration-100",
+                  isTransparent
                     ? "text-gray-200 hover:bg-white/10 hover:text-pink-200"
                     : "text-gray-700 hover:bg-gray-50 hover:text-brand-teal"
-                  }
-                `}
+                )}
               >
                 {sub.name}
               </LocalizedClientLink>
@@ -161,22 +158,23 @@ export default function DesktopNav({ cartSlot }: DesktopNavProps) {
           {/* Visible Search Bar Input */}
           <form
             onSubmit={handleSearch}
-            className={`
-              flex items-center w-36 lg:w-48 px-3 py-1 rounded-full border transition-all duration-200 text-xs
-              ${isTransparent
+            className={clx(
+              "flex items-center w-36 lg:w-48 px-3 py-1 rounded-full border transition-all duration-200 text-xs",
+              isTransparent
                 ? "bg-slate-950/40 border-white/30 text-white placeholder-white/70 focus-within:border-pink-300 focus-within:bg-slate-950/70"
-                : "bg-gray-100/90 border-gray-200 text-gray-900 placeholder-gray-400 focus-within:border-brand-teal focus-within:bg-white shadow-xs"
-              }
-            `}
+                : "bg-white border-black text-gray-900 placeholder-gray-500 focus-within:border-black shadow-none"
+            )}
           >
             <input
               type="text"
               name="q"
               placeholder="Buscar produtos..."
-              className={`w-full bg-transparent focus:outline-none pr-1 text-xs ${isTransparent ? "placeholder-white/70 text-white" : "placeholder-gray-400 text-gray-900"
-                }`}
+              className={clx(
+                "w-full bg-transparent focus:outline-none pr-1 text-xs",
+                isTransparent ? "placeholder-white/70 text-white" : "placeholder-gray-500 text-gray-900"
+              )}
             />
-            <button type="submit" className={`p-0.5 ${hoverColor} transition-colors shrink-0`} title="Buscar">
+            <button type="submit" className={clx("p-0.5 transition-colors shrink-0", hoverColor)} title="Buscar">
               <SearchIcon />
             </button>
           </form>

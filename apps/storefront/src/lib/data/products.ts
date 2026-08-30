@@ -189,7 +189,7 @@ export const getCategoryFilterOptions = async ({
   regionId,
   q,
 }: {
-  categoryId?: string
+  categoryId?: string | string[]
   allowedJeansColorsOnly?: boolean
   countryCode?: string
   regionId?: string
@@ -224,7 +224,10 @@ export const getCategoryFilterOptions = async ({
       query.region_id = region.id
     }
     if (categoryId) {
-      query.category_id = [categoryId]
+      const catArray = Array.isArray(categoryId) ? categoryId : [categoryId]
+      if (catArray.length > 0) {
+        query.category_id = catArray
+      }
     }
     if (q) {
       query.q = q

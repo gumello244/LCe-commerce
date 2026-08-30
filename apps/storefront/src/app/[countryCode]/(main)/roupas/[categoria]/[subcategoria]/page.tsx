@@ -55,11 +55,19 @@ export default async function SubcategoryPage(props: Props) {
   // Tenta buscar a categoria correspondente no Medusa pelo handle (slug da subcategoria)
   const medusaCategory = await getCategoryByHandle([subcategory.slug]).catch(() => null)
 
-  const filterData = await getCategoryFilterOptions({
-    categoryId: medusaCategory?.id,
-    allowedJeansColorsOnly: subcategory.allowedJeansColorsOnly,
-    countryCode: params.countryCode,
-  })
+  const filterData = medusaCategory
+    ? await getCategoryFilterOptions({
+        categoryId: medusaCategory.id,
+        allowedJeansColorsOnly: subcategory.allowedJeansColorsOnly,
+        countryCode: params.countryCode,
+      })
+    : {
+        availableColors: [],
+        availableSizes: [],
+        minCalculatedPrice: 0,
+        maxCalculatedPrice: 0,
+        optionValueMap: {},
+      }
 
   const optionValueIds = resolveOptionValueIds(searchParams, filterData.optionValueMap)
 
@@ -137,15 +145,22 @@ export default async function SubcategoryPage(props: Props) {
         </div>
 
         {/* Grade de Produtos */}
-        <Suspense fallback={<SkeletonProductGrid />}>
-          <PaginatedProducts
-            sortBy={sort}
-            page={pageNumber}
-            categoryId={medusaCategory?.id}
-            countryCode={params.countryCode}
-            optionValueIds={optionValueIds}
-          />
-        </Suspense>
+        {medusaCategory ? (
+          <Suspense fallback={<SkeletonProductGrid />}>
+            <PaginatedProducts
+              sortBy={sort}
+              page={pageNumber}
+              categoryId={medusaCategory.id}
+              countryCode={params.countryCode}
+              optionValueIds={optionValueIds}
+            />
+          </Suspense>
+        ) : (
+          <div className="py-16 text-center text-gray-500 w-full" data-testid="empty-category-container">
+            <p className="text-base font-medium">Nenhum produto encontrado nesta categoria.</p>
+            <p className="text-xs text-gray-400 mt-1">Em breve novos lançamentos exclusivos!</p>
+          </div>
+        )}
       </div>
     </div>
   )

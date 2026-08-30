@@ -29,7 +29,7 @@ export default async function PaginatedProducts({
   sortBy?: SortOptions
   page: number
   collectionId?: string
-  categoryId?: string
+  categoryId?: string | string[]
   productsIds?: string[]
   countryCode: string
   optionValueIds?: OptionValueIds
@@ -44,7 +44,10 @@ export default async function PaginatedProducts({
   }
 
   if (categoryId) {
-    queryParams["category_id"] = [categoryId]
+    const catArray = Array.isArray(categoryId) ? categoryId : [categoryId]
+    if (catArray.length > 0) {
+      queryParams["category_id"] = catArray
+    }
   }
 
   if (productsIds) {
@@ -76,6 +79,15 @@ export default async function PaginatedProducts({
   })
 
   const totalPages = Math.ceil(count / PRODUCT_LIMIT)
+
+  if (products.length === 0) {
+    return (
+      <div className="py-16 text-center text-gray-500 w-full" data-testid="empty-products-container">
+        <p className="text-base font-medium">Nenhum produto encontrado nesta categoria.</p>
+        <p className="text-xs text-gray-400 mt-1">Em breve novos lançamentos exclusivos!</p>
+      </div>
+    )
+  }
 
   return (
     <>
