@@ -79,6 +79,12 @@ module.exports = {
           "Ubuntu",
           "sans-serif",
         ],
+        condensed: [
+          "var(--font-roboto-condensed)",
+          "Roboto-BoldCondensed",
+          "Roboto Condensed",
+          "sans-serif",
+        ],
       },
       keyframes: {
         ring: {

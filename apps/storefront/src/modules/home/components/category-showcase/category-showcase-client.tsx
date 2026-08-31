@@ -116,9 +116,9 @@ export default function CategoryShowcaseClient({
   return (
     <section className="w-full bg-white pt-12 pb-16 md:pt-16 md:pb-20 select-none">
       {/* ── 1. CABEÇALHO COM TÍTULO E ABAS DE CATEGORIAS (PILLS) ── */}
-      <div className="max-w-[1440px] mx-auto px-4 md:px-6 mb-8 flex flex-col items-center">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-6 mb-8 flex flex-col items-center font-condensed">
         {/* Título Centralizado */}
-        <h2 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 uppercase text-center mb-6">
+        <h2 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 uppercase text-center mb-6 font-condensed">
           Compre por Categoria
         </h2>
 
@@ -133,7 +133,7 @@ export default function CategoryShowcaseClient({
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`
-                    px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer
+                    px-4 py-1.5 rounded-full text-xs font-bold tracking-wide transition-all duration-200 cursor-pointer font-condensed
                     ${
                       isActive
                         ? "bg-black text-white shadow-xs scale-102"
@@ -151,7 +151,7 @@ export default function CategoryShowcaseClient({
           <div className="hidden md:block flex-shrink-0">
             <LocalizedClientLink
               href={currentTab.href}
-              className="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide bg-white text-black border border-black hover:bg-black hover:text-white transition-all flex items-center gap-1 group"
+              className="px-4 py-1.5 rounded-full text-xs font-bold tracking-wide bg-white text-black border border-black hover:bg-black hover:text-white transition-all flex items-center gap-1 group font-condensed"
             >
               <span>Ver Todos os {currentTab.label}</span>
               <svg
@@ -372,10 +372,10 @@ export default function CategoryShowcaseClient({
       </div>
 
       {/* Botão Ver Todos no Mobile (no rodapé da seção) */}
-      <div className="md:hidden mt-6 flex justify-center px-4">
+      <div className="md:hidden mt-6 flex justify-center px-4 font-condensed">
         <LocalizedClientLink
           href={currentTab.href}
-          className="w-full max-w-xs text-center py-2.5 rounded-full text-xs font-semibold tracking-wide bg-black text-white hover:bg-gray-800 transition-all shadow-xs"
+          className="w-full max-w-xs text-center py-2.5 rounded-full text-xs font-bold tracking-wide bg-black text-white hover:bg-gray-800 transition-all shadow-xs font-condensed"
         >
           Ver Todos os {currentTab.label}
         </LocalizedClientLink>

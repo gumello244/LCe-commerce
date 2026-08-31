@@ -9,13 +9,24 @@ const jhcSineas = localFont({
   display: "swap",
 })
 
+const robotoBoldCondensed = localFont({
+  src: "../../public/fonts/Roboto-BoldCondensed.ttf",
+  variable: "--font-roboto-condensed",
+  display: "swap",
+})
+
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseURL()),
 }
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={jhcSineas.variable} data-mode="light" suppressHydrationWarning>
+    <html
+      lang="pt-BR"
+      className={`${jhcSineas.variable} ${robotoBoldCondensed.variable}`}
+      data-mode="light"
+      suppressHydrationWarning
+    >
       <body suppressHydrationWarning>
         <main className="relative">{props.children}</main>
       </body>
