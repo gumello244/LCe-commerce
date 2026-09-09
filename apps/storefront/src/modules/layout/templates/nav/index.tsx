@@ -11,10 +11,10 @@ import AnnouncementBar from "@modules/layout/components/announcement-bar"
 export default async function Nav() {
   return (
     <NavHeader>
-      {/* ── Faixa de Anúncios no Topo (Modo Camaleão) ── */}
+      {/* ── Faixa de Anúncios no Topo (Preta, Estilo Anthropologie) ── */}
       <AnnouncementBar />
 
-      {/* ── Desktop (md+): Header Mamô ── */}
+      {/* ── Desktop (md+): Header Estilo Anthropologie ── */}
       <div className="hidden md:block w-full">
         <DesktopNav
           cartSlot={

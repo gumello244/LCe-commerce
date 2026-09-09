@@ -96,8 +96,6 @@ const Hero = () => {
         ))}
       </div>
 
-      {/* Subtle top gradient overlay for header readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent opacity-70 pointer-events-none z-10" />
 
       {/* Navigation Arrows */}
       <button

@@ -5,9 +5,13 @@ import { usePathname, useParams } from "next/navigation"
 
 type NavHeaderContextType = {
   isTransparent: boolean
+  showAnnouncement: boolean
 }
 
-const NavHeaderContext = createContext<NavHeaderContextType>({ isTransparent: false })
+const NavHeaderContext = createContext<NavHeaderContextType>({
+  isTransparent: false,
+  showAnnouncement: true,
+})
 
 export const useNavHeader = () => useContext(NavHeaderContext)
 
@@ -30,7 +34,7 @@ export default function NavHeader({ children }: NavHeaderProps) {
   useEffect(() => {
     setMounted(true)
     const handleScroll = () => {
-      if (window.scrollY > 100) {
+      if (window.scrollY > 50) {
         setIsScrolled(true)
       } else {
         setIsScrolled(false)
@@ -42,22 +46,12 @@ export default function NavHeader({ children }: NavHeaderProps) {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // Evita erro de Hidratação do React (SSR vs Client): no primeiro render usa o estado do servidor
-  const isTransparent = isHome && (!mounted || !isScrolled)
+  // A barrinha de anúncios só aparece quando o usuário está no topo da home
+  const showAnnouncement = isHome && (!mounted || !isScrolled)
 
   return (
-    <NavHeaderContext.Provider value={{ isTransparent }}>
-      <div
-        className={
-          isHome
-            ? `fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-                isTransparent
-                  ? "bg-transparent border-b border-transparent shadow-none"
-                  : "bg-white/95 backdrop-blur-md border-b border-black shadow-none"
-              }`
-            : "relative w-full z-40 bg-white border-b border-black shadow-none"
-        }
-      >
+    <NavHeaderContext.Provider value={{ isTransparent: false, showAnnouncement }}>
+      <div className="sticky top-0 inset-x-0 z-50 bg-white border-b border-gray-200 transition-all duration-300">
         <header className="relative w-full font-[family-name:var(--font-jhc-sineas)]">
           {children}
         </header>

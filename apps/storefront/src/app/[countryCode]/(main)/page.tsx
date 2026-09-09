@@ -20,7 +20,7 @@ export default async function Home(props: Props) {
 
   return (
     <main className="min-h-screen w-full bg-white pb-20">
-      {/* Hero Banner Principal com Header Camaleão sobreposto */}
+      {/* Hero Banner Principal posicionado abaixo do Header */}
       <Hero />
 
       {/* Mini Vitrine Editorial: Shop By Category (Vestidos) */}

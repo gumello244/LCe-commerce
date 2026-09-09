@@ -2,30 +2,32 @@
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Image from "next/image"
-import { useNavHeader } from "@modules/layout/components/nav-header"
 import { ReactNode } from "react"
 
 export default function MobileNav({ cartSlot }: { cartSlot: ReactNode }) {
-  const { isTransparent } = useNavHeader()
-  const textColor = isTransparent ? "text-white" : "text-gray-900"
-
   return (
-    <nav className={`md:hidden content-container flex items-center justify-between w-full h-16 px-4 ${textColor}`}>
+    <nav className="md:hidden flex items-center justify-between w-full h-14 px-4 bg-white text-gray-900 border-b border-gray-200">
       <LocalizedClientLink
         href="/"
         className="flex items-center"
         data-testid="nav-store-link-mobile"
       >
         <Image
-          src={isTransparent ? "/logo-white.png" : "/logo.png"}
+          src="/logo.png"
           alt="Louise Castelatto"
           width={1024}
           height={118}
-          className="h-7 w-auto object-contain transition-all duration-300"
+          className="h-6 w-auto object-contain"
           priority
         />
       </LocalizedClientLink>
       <div className="flex items-center gap-3">
+        <LocalizedClientLink
+          href="/store"
+          className="text-[11px] uppercase tracking-wider font-medium text-gray-700 hover:text-black px-2.5 py-1 border border-gray-200 rounded-[2px]"
+        >
+          Explorar
+        </LocalizedClientLink>
         {cartSlot}
       </div>
     </nav>
