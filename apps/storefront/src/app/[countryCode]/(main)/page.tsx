@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import PromoBanner from "@modules/home/components/promo-banner"
 import Hero from "@modules/home/components/hero"
 import CategoryShowcase from "@modules/home/components/category-showcase"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
@@ -20,6 +21,9 @@ export default async function Home(props: Props) {
 
   return (
     <main className="min-h-screen w-full bg-white pb-20">
+      {/* Banner Promocional no Topo (acima do Hero Banner) */}
+      <PromoBanner />
+
       {/* Hero Banner Principal posicionado abaixo do Header */}
       <Hero />
 
